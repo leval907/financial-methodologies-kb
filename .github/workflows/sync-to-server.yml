@@ -1,0 +1,111 @@
+name: Sync to Server
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'data/**'
+      - 'schemas/**'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Validate JSON files
+        run: |
+          echo "🔍 Validating JSON files..."
+          for file in data/**/*.json; do
+            if ! python3 -m json.tool "$file" > /dev/null 2>&1; then
+              echo "❌ Invalid JSON: $file"
+              exit 1
+            fi
+          done
+          echo "✅ All JSON files are valid"
+      
+      - name: Trigger server sync
+        if: success()
+        run: |
+          echo "🚀 Triggering sync to kb.findbc.ru..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            https://kb.findbc.ru/api/admin/sync \
+            -H "Authorization: Bearer ${{ secrets.SYNC_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"repository\": \"${{ github.repository }}\",
+              \"commit\": \"${{ github.sha }}\",
+              \"branch\": \"${{ github.ref_name }}\",
+              \"author\": \"${{ github.actor }}\",
+              \"message\": $(echo '${{ github.event.head_commit.message }}' | jq -Rs .)
+            }")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 202 ]; then
+            echo "✅ Sync triggered successfully"
+            echo "$BODY"
+          else
+            echo "❌ Sync failed with status $HTTP_CODE"
+            echo "$BODY"
+            exit 1
+          fi
+      
+      - name: Wait for sync completion
+        if: success()
+        timeout-minutes: 5
+        run: |
+          echo "⏳ Waiting for sync to complete..."
+          
+          for i in {1..30}; do
+            RESPONSE=$(curl -s -w "\n%{http_code}" \
+              https://kb.findbc.ru/api/admin/sync/status/${{ github.sha }} \
+              -H "Authorization: Bearer ${{ secrets.SYNC_TOKEN }}")
+            
+            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+            BODY=$(echo "$RESPONSE" | sed '$d')
+            
+            if [ "$HTTP_CODE" -ne 200 ]; then
+              echo "⚠️ Status check failed: $HTTP_CODE"
+              sleep 10
+              continue
+            fi
+            
+            STATUS=$(echo "$BODY" | jq -r '.status')
+            
+            if [ "$STATUS" = "completed" ]; then
+              echo "✅ Sync completed successfully!"
+              echo "$BODY" | jq .
+              exit 0
+            elif [ "$STATUS" = "failed" ]; then
+              echo "❌ Sync failed!"
+              echo "$BODY" | jq .
+              exit 1
+            else
+              echo "⏳ Status: $STATUS (attempt $i/30)"
+              sleep 10
+            fi
+          done
+          
+          echo "⏱️ Sync timeout - check server logs"
+          exit 1
+      
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Server sync failed. Check [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
+            })

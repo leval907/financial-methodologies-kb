@@ -1,0 +1,314 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2024-12-12",
+  "indicators": [
+    {
+      "id": "net_cash_flow",
+      "name_en": "Net Cash Flow",
+      "name_ru": "Чистый денежный поток",
+      "alias": ["NCF", "Operating Cash Flow"],
+      "methodology": ["cash_flow_story"],
+      "category": "cash_flow",
+      "formula": {
+        "latex": "NCF = EBITDA - CapEx - Tax - \\Delta WC",
+        "plain": "NCF = EBITDA - CapEx - Tax - Change in Working Capital",
+        "variables": {
+          "EBITDA": "ebitda",
+          "CapEx": "capital_expenditures",
+          "Tax": "cash_tax_paid",
+          "WC": "working_capital"
+        }
+      },
+      "unit": "currency",
+      "interpretation": {
+        "positive": {
+          "meaning": "Company generates cash from operations",
+          "action": "Good sign, but check sustainability"
+        },
+        "negative": {
+          "meaning": "Company consumes cash",
+          "action": "Investigate Working Capital and CapEx"
+        }
+      },
+      "related_indicators": [
+        "marginal_cash_flow",
+        "clean_cash_flow",
+        "working_capital"
+      ],
+      "documentation": "docs/methodologies/cash-flow-story/indicators/net-cash-flow.md"
+    },
+    {
+      "id": "marginal_cash_flow",
+      "name_en": "Marginal Cash Flow",
+      "name_ru": "Маржинальный денежный поток",
+      "alias": ["MCF", "Incremental Cash Flow"],
+      "methodology": ["cash_flow_story"],
+      "category": "cash_flow",
+      "difficulty": "intermediate",
+      "formula": {
+        "latex": "MCF = \\frac{\\Delta NCF}{\\Delta Revenue}",
+        "plain": "MCF = Change in Net Cash Flow / Change in Revenue",
+        "variables": {
+          "NCF": "net_cash_flow",
+          "Revenue": "revenue"
+        }
+      },
+      "unit": "ratio",
+      "interpretation": {
+        "excellent": {
+          "condition": "> 0.2",
+          "meaning": "Growth generates significant cash",
+          "action": "Scale up! Growth is profitable"
+        },
+        "good": {
+          "condition": "0 to 0.2",
+          "meaning": "Growth generates some cash",
+          "action": "Monitor Working Capital closely"
+        },
+        "warning": {
+          "condition": "-0.2 to 0",
+          "meaning": "Growth consumes cash",
+          "action": "Urgent Working Capital analysis needed"
+        },
+        "critical": {
+          "condition": "< -0.5",
+          "meaning": "Growth destroys cash",
+          "action": "Immediate action! Stop growth or fix WC"
+        }
+      },
+      "related_indicators": [
+        "net_cash_flow",
+        "working_capital",
+        "revenue",
+        "clean_cash_flow"
+      ],
+      "use_cases": ["growth_without_cash", "growth_planning"],
+      "documentation": "docs/methodologies/cash-flow-story/indicators/marginal-cash-flow.md"
+    },
+    {
+      "id": "working_capital",
+      "name_en": "Working Capital",
+      "name_ru": "Оборотный капитал",
+      "alias": ["WC", "Net Working Capital", "NWC"],
+      "methodology": ["cash_flow_story", "simple_numbers", "analytics_factory"],
+      "category": "capital",
+      "formula": {
+        "latex": "WC = AR + Inventory - AP",
+        "plain": "Working Capital = Accounts Receivable + Inventory - Accounts Payable",
+        "variables": {
+          "AR": "accounts_receivable",
+          "Inventory": "inventory",
+          "AP": "accounts_payable"
+        }
+      },
+      "unit": "currency",
+      "benchmarks": {
+        "retail": {
+          "low": 5,
+          "typical": 8,
+          "high": 12,
+          "unit": "percent_of_revenue"
+        },
+        "manufacturing": {
+          "low": 10,
+          "typical": 15,
+          "high": 20,
+          "unit": "percent_of_revenue"
+        },
+        "distribution": {
+          "low": 8,
+          "typical": 12,
+          "high": 18,
+          "unit": "percent_of_revenue"
+        }
+      },
+      "interpretation": {
+        "note": "WC% = (Working Capital / Revenue) * 100",
+        "low": {
+          "meaning": "Efficient capital usage",
+          "risk": "May indicate strained relationships with suppliers"
+        },
+        "high": {
+          "meaning": "Inefficient capital usage",
+          "risk": "Cash tied up, limits growth"
+        }
+      },
+      "related_indicators": [
+        "ar_days",
+        "inventory_days",
+        "ap_days",
+        "cash_conversion_cycle",
+        "marginal_cash_flow"
+      ],
+      "components": ["ar_days", "inventory_days", "ap_days"],
+      "documentation": "docs/methodologies/cash-flow-story/indicators/working-capital.md"
+    },
+    {
+      "id": "ar_days",
+      "name_en": "Accounts Receivable Days",
+      "name_ru": "Период оборота дебиторской задолженности",
+      "alias": ["AR Days", "DSO", "Days Sales Outstanding"],
+      "methodology": ["cash_flow_story"],
+      "category": "efficiency",
+      "formula": {
+        "latex": "AR_{days} = \\frac{AR \\times 365}{Revenue}",
+        "plain": "AR Days = (Accounts Receivable × 365) / Revenue",
+        "variables": {
+          "AR": "accounts_receivable",
+          "Revenue": "revenue"
+        }
+      },
+      "unit": "days",
+      "benchmarks": {
+        "b2b": {
+          "excellent": 30,
+          "good": 45,
+          "acceptable": 60,
+          "poor": 90
+        },
+        "b2c": {
+          "excellent": 0,
+          "good": 15,
+          "acceptable": 30,
+          "poor": 45
+        }
+      },
+      "interpretation": {
+        "low": {
+          "meaning": "Fast payment collection",
+          "action": "Good! But check if credit terms are competitive"
+        },
+        "high": {
+          "meaning": "Slow payment collection",
+          "action": "Review credit policy, chase overdue payments"
+        }
+      },
+      "related_indicators": [
+        "working_capital",
+        "cash_conversion_cycle",
+        "marginal_cash_flow"
+      ],
+      "power_of_one_leverage": true,
+      "documentation": "docs/methodologies/cash-flow-story/indicators/ar-days.md"
+    },
+    {
+      "id": "inventory_days",
+      "name_en": "Inventory Days",
+      "name_ru": "Период оборота запасов",
+      "alias": ["Inventory Days", "DIO", "Days Inventory Outstanding"],
+      "methodology": ["cash_flow_story"],
+      "category": "efficiency",
+      "formula": {
+        "latex": "Inv_{days} = \\frac{Inventory \\times 365}{COGS}",
+        "plain": "Inventory Days = (Inventory × 365) / Cost of Goods Sold",
+        "variables": {
+          "Inventory": "inventory",
+          "COGS": "cost_of_goods_sold"
+        }
+      },
+      "unit": "days",
+      "benchmarks": {
+        "retail": {
+          "excellent": 30,
+          "good": 45,
+          "acceptable": 60,
+          "poor": 90
+        },
+        "manufacturing": {
+          "excellent": 45,
+          "good": 60,
+          "acceptable": 90,
+          "poor": 120
+        }
+      },
+      "interpretation": {
+        "low": {
+          "meaning": "Fast inventory turnover",
+          "risk": "May indicate stockouts"
+        },
+        "high": {
+          "meaning": "Slow inventory turnover",
+          "risk": "Cash tied up, obsolescence risk"
+        }
+      },
+      "related_indicators": [
+        "working_capital",
+        "cash_conversion_cycle"
+      ],
+      "power_of_one_leverage": true,
+      "documentation": "docs/methodologies/cash-flow-story/indicators/inventory-days.md"
+    },
+    {
+      "id": "ap_days",
+      "name_en": "Accounts Payable Days",
+      "name_ru": "Период оборота кредиторской задолженности",
+      "alias": ["AP Days", "DPO", "Days Payable Outstanding"],
+      "methodology": ["cash_flow_story"],
+      "category": "efficiency",
+      "formula": {
+        "latex": "AP_{days} = \\frac{AP \\times 365}{COGS}",
+        "plain": "AP Days = (Accounts Payable × 365) / Cost of Goods Sold",
+        "variables": {
+          "AP": "accounts_payable",
+          "COGS": "cost_of_goods_sold"
+        }
+      },
+      "unit": "days",
+      "interpretation": {
+        "low": {
+          "meaning": "Fast payment to suppliers",
+          "note": "Reduces Working Capital (good), but may miss discounts"
+        },
+        "high": {
+          "meaning": "Slow payment to suppliers",
+          "note": "Increases Working Capital (bad), but preserves cash"
+        }
+      },
+      "related_indicators": [
+        "working_capital",
+        "cash_conversion_cycle"
+      ],
+      "power_of_one_leverage": true,
+      "documentation": "docs/methodologies/cash-flow-story/indicators/ap-days.md"
+    },
+    {
+      "id": "cash_conversion_cycle",
+      "name_en": "Cash Conversion Cycle",
+      "name_ru": "Цикл конвертации денежных средств",
+      "alias": ["CCC", "Cash Cycle"],
+      "methodology": ["cash_flow_story"],
+      "category": "efficiency",
+      "formula": {
+        "latex": "CCC = AR_{days} + Inv_{days} - AP_{days}",
+        "plain": "CCC = AR Days + Inventory Days - AP Days",
+        "variables": {
+          "AR_days": "ar_days",
+          "Inv_days": "inventory_days",
+          "AP_days": "ap_days"
+        }
+      },
+      "unit": "days",
+      "interpretation": {
+        "negative": {
+          "meaning": "Company receives cash before paying suppliers",
+          "example": "Amazon, Dell - very efficient"
+        },
+        "low_positive": {
+          "condition": "< 30 days",
+          "meaning": "Efficient cash conversion"
+        },
+        "high_positive": {
+          "condition": "> 60 days",
+          "meaning": "Slow cash conversion, cash tied up"
+        }
+      },
+      "related_indicators": [
+        "ar_days",
+        "inventory_days",
+        "ap_days",
+        "working_capital"
+      ],
+      "documentation": "docs/methodologies/cash-flow-story/indicators/cash-conversion-cycle.md"
+    }
+  ]
+}

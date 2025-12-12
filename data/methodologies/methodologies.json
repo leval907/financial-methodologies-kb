@@ -1,0 +1,230 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2024-12-12",
+  "methodologies": [
+    {
+      "id": "cash_flow_story",
+      "name_en": "Cash Flow Story",
+      "name_ru": "История денежного потока",
+      "author": "Joss Milner",
+      "year": "2010s",
+      "priority": 1,
+      "status": "complete",
+      "focus_areas": [
+        "cash_generation",
+        "working_capital_management",
+        "growth_paradox"
+      ],
+      "key_principles": [
+        "Profit ≠ Cash",
+        "Working Capital is the main cash consumer",
+        "Marginal effect matters more than current state"
+      ],
+      "applicable_to": {
+        "industries": ["manufacturing", "distribution", "retail", "services"],
+        "company_size": ["small", "medium", "large"],
+        "situations": [
+          "Growth without cash",
+          "High working capital",
+          "Cash flow problems"
+        ]
+      },
+      "key_indicators": [
+        "net_cash_flow",
+        "marginal_cash_flow",
+        "working_capital",
+        "ar_days",
+        "inventory_days",
+        "ap_days",
+        "cash_conversion_cycle"
+      ],
+      "frameworks": [
+        "power_of_one",
+        "cash_conversion_cycle",
+        "working_capital_analysis"
+      ],
+      "documentation": "docs/methodologies/cash-flow-story/README.md",
+      "resources": {
+        "books": [
+          "Cash Flow Story by Joss Milner"
+        ],
+        "articles": [
+          "The Growth Paradox: Why Revenue Doesn't Equal Cash",
+          "Working Capital Management: Beyond the Basics"
+        ]
+      }
+    },
+    {
+      "id": "simple_numbers",
+      "name_en": "Simple Numbers",
+      "name_ru": "Простые цифры",
+      "author": "Greg Crabtree",
+      "year": "2011",
+      "priority": 1,
+      "status": "structure_only",
+      "focus_areas": [
+        "capital_needs",
+        "business_models",
+        "cash_planning"
+      ],
+      "key_principles": [
+        "4 Types of Capital: Launch, Trade, Infrastructure, Buffer",
+        "Business model matters: Make vs Sell vs Do",
+        "CPR (Cash Power Ratio): Profit% > Trade Capital%"
+      ],
+      "applicable_to": {
+        "industries": ["all"],
+        "company_size": ["small", "medium"],
+        "situations": [
+          "Capital planning",
+          "Business model selection",
+          "Growth funding"
+        ]
+      },
+      "key_indicators": [
+        "trade_capital",
+        "buffer_capital",
+        "dler",
+        "mler",
+        "cpr"
+      ],
+      "frameworks": [
+        "cpr_analysis",
+        "capital_needs",
+        "five_forces_of_cash_flow"
+      ],
+      "business_models": ["make", "sell", "do"],
+      "documentation": "docs/methodologies/simple-numbers/README.md",
+      "resources": {
+        "books": [
+          "Simple Numbers, Straight Talk, Big Profits! by Greg Crabtree"
+        ]
+      }
+    },
+    {
+      "id": "theory_of_constraints",
+      "name_en": "Theory of Constraints",
+      "name_ru": "Теория ограничений",
+      "author": "Eliyahu Goldratt",
+      "year": "1984",
+      "priority": 1,
+      "status": "structure_only",
+      "focus_areas": [
+        "throughput_maximization",
+        "constraint_identification",
+        "production_optimization"
+      ],
+      "key_principles": [
+        "Every system has a constraint",
+        "Throughput = Revenue - Truly Variable Costs",
+        "5 Focusing Steps: Identify → Exploit → Subordinate → Elevate → Repeat"
+      ],
+      "applicable_to": {
+        "industries": ["manufacturing", "production"],
+        "company_size": ["medium", "large"],
+        "situations": [
+          "Capacity constraints",
+          "Product mix optimization",
+          "Bottleneck identification"
+        ]
+      },
+      "key_indicators": [
+        "throughput",
+        "investment_toc",
+        "operating_expense_toc",
+        "throughput_per_constraint_unit"
+      ],
+      "frameworks": [
+        "five_focusing_steps",
+        "drum_buffer_rope",
+        "product_mix_optimization"
+      ],
+      "documentation": "docs/methodologies/theory-of-constraints/README.md",
+      "resources": {
+        "books": [
+          "The Goal by Eliyahu Goldratt",
+          "Theory of Constraints by Eliyahu Goldratt"
+        ]
+      }
+    },
+    {
+      "id": "lean_accounting",
+      "name_en": "Lean Accounting",
+      "name_ru": "Бережливый учёт",
+      "author": "Brian Maskell, Bruce Baggaley",
+      "year": "2000s",
+      "priority": 2,
+      "status": "planned",
+      "focus_areas": [
+        "value_stream_costing",
+        "transaction_elimination",
+        "visual_management"
+      ],
+      "key_principles": [
+        "Value Stream organization, not functional",
+        "Box Score: Operational + Financial + Capacity",
+        "Eliminate transactions: no labor tracking, backflush materials"
+      ],
+      "applicable_to": {
+        "industries": ["manufacturing", "lean_production"],
+        "company_size": ["medium", "large"],
+        "situations": [
+          "Lean transformation",
+          "Value stream management",
+          "Overhead reduction"
+        ]
+      },
+      "key_indicators": [
+        "sales_per_person",
+        "dock_to_dock_days",
+        "first_time_through",
+        "oee"
+      ],
+      "frameworks": [
+        "box_score",
+        "value_stream_mapping",
+        "cell_measurements"
+      ],
+      "documentation": "docs/methodologies/lean-accounting/README.md",
+      "resources": {
+        "books": [
+          "Practical Lean Accounting by Brian Maskell, Bruce Baggaley"
+        ]
+      }
+    },
+    {
+      "id": "analytics_factory",
+      "name_en": "Analytics Factory",
+      "name_ru": "Фабрика аналитики",
+      "author": "Vladimir Volnin",
+      "year": "2010s",
+      "priority": 2,
+      "status": "planned",
+      "focus_areas": [
+        "comprehensive_analysis",
+        "dupont_framework",
+        "eva_analysis"
+      ],
+      "key_principles": [
+        "DuPont Analysis: ROE decomposition",
+        "EVA: Economic Value Added",
+        "GAP Analysis: Target vs Actual"
+      ],
+      "applicable_to": {
+        "industries": ["all"],
+        "company_size": ["large", "holdings"],
+        "situations": [
+          "Comprehensive financial analysis",
+          "Multi-company holdings",
+          "Performance management"
+        ]
+      },
+      "frameworks": [
+        "dupont_analysis",
+        "eva_analysis",
+        "gap_analysis"
+      ],
+      "documentation": "docs/methodologies/analytics-factory/README.md"
+    }
+  ]
+}
