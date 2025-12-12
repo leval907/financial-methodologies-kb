@@ -1,0 +1,9 @@
+term: decision
+title: Решение
+definition: >
+  Осознанный управленческий выбор, принятый на основе методологии
+  и подтверждённый моделями.
+relations:
+  supported_by:
+    - methodology
+    - model

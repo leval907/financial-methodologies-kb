@@ -1,0 +1,11 @@
+term: model
+title: Модель
+definition: >
+  Инструмент принятия решений, используемый внутри методологии
+  для оценки сценариев и последствий изменений.
+examples:
+  - power_of_one_levers
+  - sustainable_growth_model
+relations:
+  depends_on:
+    - methodology

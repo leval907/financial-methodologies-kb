@@ -1,0 +1,8 @@
+term: rule
+title: Правило
+definition: >
+  Формализованное условие вида if–then, связывающее показатели
+  с рекомендуемыми управленческими действиями.
+examples:
+  - cash_velocity_low_rule
+status: approved

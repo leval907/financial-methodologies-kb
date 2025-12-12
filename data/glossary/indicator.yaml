@@ -1,0 +1,12 @@
+term: indicator
+title: Показатель
+definition: >
+  Измеримая характеристика бизнеса, используемая для диагностики
+  и оценки эффективности.
+synonyms:
+  - KPI
+  - Metric
+relations:
+  used_in:
+    - methodology
+    - model

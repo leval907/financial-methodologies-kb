@@ -1,0 +1,8 @@
+term: artifact
+title: Артефакт
+definition: >
+  Результат применения методологии (отчет, документ, схема),
+  используемый для коммуникации и управления.
+examples:
+  - management_report
+  - one_pager

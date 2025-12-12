@@ -1,0 +1,9 @@
+term: driver
+title: Финансовый драйвер
+definition: >
+  Крупный блок факторов, определяющий финансовое состояние бизнеса
+  (рентабельность, оборотный капитал, прочий капитал, финансирование).
+examples:
+  - profitability
+  - working_capital
+status: approved

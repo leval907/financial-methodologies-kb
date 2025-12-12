@@ -1,0 +1,8 @@
+term: management_logic
+title: Управленческая логика
+definition: >
+  Совокупность принципов и причинно-следственных связей,
+  определяющих, как именно принимаются управленческие решения.
+relations:
+  embodied_in: [methodology]
+status: approved

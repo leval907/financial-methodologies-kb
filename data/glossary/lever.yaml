@@ -1,0 +1,11 @@
+term: lever
+title: Рычаг
+definition: >
+  Управляемый параметр или действие, изменение которого
+  приводит к изменению финансового результата.
+examples:
+  - price_increase
+  - dso_reduction
+relations:
+  affects:
+    - indicator

@@ -1,5 +1,6 @@
 ---
 id: cash-flow-story
+methodology_id: cash-flow-story
 author: Joss Milner
 year: 2010s
 version: 1.0.0
@@ -7,6 +8,7 @@ tags: [cash_flow, working_capital, growth, diagnostic]
 difficulty: intermediate
 focus_areas: [cash_generation, working_capital_management, growth_paradox]
 applicable_to: [manufacturing, distribution, retail, services]
+glossary_terms: [methodology, model, indicator, lever, rule, artifact, cash_flow, working_capital, profitability]
 ---
 
 # Cash Flow Story

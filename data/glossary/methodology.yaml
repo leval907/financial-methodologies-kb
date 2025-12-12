@@ -1,0 +1,13 @@
+term: methodology
+title: Методология
+definition: >
+  Логика управления бизнесом, определяющая способ анализа,
+  принятия решений и использования моделей.
+examples:
+  - power_of_one
+  - cash_flow_story
+relations:
+  contrasted_with:
+    - model
+  uses:
+    - model
