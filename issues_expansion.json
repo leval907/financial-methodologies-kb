@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Formalize Simple Numbers Methodology (Greg Crabtree)",
+    "body": "## Description\nРеализовать методологию Simple Numbers (Greg Crabtree) в базе знаний.\n\n## Acceptance criteria\n- Создана структура `docs/methodologies/simple-numbers/`\n- Создан `data/methodologies/simple-numbers.yaml`\n- Определены 4 типа капитала (Launch, Trade, Infrastructure, Buffer)\n- Определены бенчмарки для моделей Make/Sell/Do\n- Реализованы показатели dLER, mLER, CPR\n",
+    "labels": ["methodology", "simple-numbers", "content"]
+  },
+  {
+    "title": "Formalize Theory of Constraints (TOC)",
+    "body": "## Description\nРеализовать методологию Theory of Constraints (Eliyahu Goldratt).\n\n## Acceptance criteria\n- Создана структура `docs/methodologies/toc/`\n- Создан `data/methodologies/toc.yaml`\n- Определены метрики T (Throughput), I (Investment), OE (Operating Expense)\n- Описаны 5 фокусирующих шагов\n- Реализованы производные метрики (ROI, Productivity)\n",
+    "labels": ["methodology", "toc", "content"]
+  },
+  {
+    "title": "Formalize Lean Accounting",
+    "body": "## Description\nРеализовать методологию Lean Accounting (Maskell & Baggaley).\n\n## Acceptance criteria\n- Создана структура `docs/methodologies/lean-accounting/`\n- Создан `data/methodologies/lean-accounting.yaml`\n- Реализован Box Score (Operational, Financial, Capacity)\n- Определены метрики Value Stream (Sales per Person, Dock-to-Dock, etc.)\n",
+    "labels": ["methodology", "lean-accounting", "content"]
+  },
+  {
+    "title": "Create Cross-Methodology Mapping",
+    "body": "## Description\nСоздать карту соответствия терминов и показателей между разными методологиями.\n\n## Acceptance criteria\n- Создан файл маппинга (например, `data/cross_mapping.yaml`)\n- Описаны связи: Working Capital (CFS) ↔ Trade Capital (SN) ↔ I (TOC)\n- Описаны связи: Gross Profit ↔ Throughput\n- Документация в `docs/cross-methodology/`\n",
+    "labels": ["integration", "architecture", "mapping"]
+  }
+]

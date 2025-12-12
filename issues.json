@@ -1,0 +1,67 @@
+[
+  {
+    "title": "Define core project terminology and glossary structure",
+    "body": "## Description\nЗафиксировать базовые определения проекта (методология, модель, инструмент моделирования и т.д.) и структуру глоссария как отдельного слоя.\n\n## Acceptance criteria\n- Создана папка `docs/glossary/`\n- Создана папка `data/glossary/`\n- Определены правила добавления терминов\n- Глоссарий отделён от методологий\n",
+    "labels": ["architecture", "glossary", "foundation"]
+  },
+  {
+    "title": "Create Glossary v1.0 (25 core terms)",
+    "body": "## Description\nДобавить глоссарий v1.0 с 25 базовыми терминами проекта.\n\n## Acceptance criteria\n- 25 YAML-файлов в `data/glossary/`\n- Соответствующие MD-файлы в `docs/glossary/terms/`\n- Термины покрывают методологии, модели, финансы и системный слой\n",
+    "labels": ["glossary", "content", "v1"]
+  },
+  {
+    "title": "Add glossary validation script",
+    "body": "## Description\nДобавить серверный скрипт проверки целостности глоссария и его использования в методологиях.\n\n## Acceptance criteria\n- Скрипт проверяет:\n  - существование терминов\n  - дубли\n  - «висячие» термины\n  - корректность front matter\n- Скрипт запускается из корня репозитория\n",
+    "labels": ["tooling", "quality", "automation"]
+  },
+  {
+    "title": "Define universal methodology template",
+    "body": "## Description\nЗафиксировать единый шаблон методологии (MD + YAML), обязательный для всех новых методологий.\n\n## Acceptance criteria\n- Папка `docs/methodologies/_template`\n- YAML-шаблон `data/methodologies/_template.yaml`\n- Чёткое разделение: логика управления vs инструменты\n",
+    "labels": ["methodology", "standard", "architecture"]
+  },
+  {
+    "title": "Enforce front matter standard for methodologies",
+    "body": "## Description\nВвести обязательный front matter для всех файлов методологий.\n\n## Acceptance criteria\n- `methodology_id`\n- `doc_type`\n- `glossary_terms`\n- Документирован стандарт в README\n",
+    "labels": ["methodology", "quality"]
+  },
+  {
+    "title": "Formalize Power of One as a management methodology (5 stages)",
+    "body": "## Description\nОписать Power of One как управленческую методологию из 5 этапов, а не как набор рычагов.\n\n## Acceptance criteria\n- Чётко выделены 5 этапов:\n  1. Финансовая диагностика (4 блока)\n  2. Балансовое переосмысление\n  3. Смена управленческого фокуса\n  4. Инструмент моделирования Power of One\n  5. Планирование и управление ростом\n- Описание соответствует глоссарию\n",
+    "labels": ["methodology", "power-of-one", "core"]
+  },
+  {
+    "title": "Separate Power of One modeling tool from methodology",
+    "body": "## Description\nВыделить Power of One (+1%) как инструмент моделирования, подчинённый методологии.\n\n## Acceptance criteria\n- Инструмент оформлен как `model` / `modeling_tool`\n- Не смешан с логикой методологии\n- Использует входы из диагностики\n",
+    "labels": ["modeling", "power-of-one"]
+  },
+  {
+    "title": "Define Power of One output report form",
+    "body": "## Description\nЗафиксировать стандартную выходную форму Power of One (управленческий отчёт).\n\n## Acceptance criteria\n- 4 блока диагностики\n- Балансовое уравнение\n- Таблица Power of One\n- Sustainable Growth\n- Фокус управленческих решений\n",
+    "labels": ["artifact", "reporting", "power-of-one"]
+  },
+  {
+    "title": "Define methodology indexing rules for finance-knowledge",
+    "body": "## Description\nОпределить, как методологии индексируются в `finance-knowledge`.\n\n## Acceptance criteria\n- Источник `methodology_id`\n- Правила чанкинга\n- Теги и метаданные\n- Типы документов\n",
+    "labels": ["integration", "indexer"]
+  },
+  {
+    "title": "Define graph entities and edges for methodologies (ArangoDB)",
+    "body": "## Description\nЗафиксировать сущности и связи для графовой модели (ArangoDB).\n\n## Acceptance criteria\n- Vertex: methodology, model, indicator, term\n- Edge: uses, depends_on, related_to\n- Документирована схема\n",
+    "labels": ["graph", "architecture", "integration"]
+  },
+  {
+    "title": "Add validation for methodology completeness",
+    "body": "## Description\nДобавить проверки, что методология соответствует шаблону.\n\n## Acceptance criteria\n- Все обязательные файлы присутствуют\n- Все термины существуют в глоссарии\n- Нет несогласованных ID\n",
+    "labels": ["quality", "automation"]
+  },
+  {
+    "title": "Define contribution rules for methodologies",
+    "body": "## Description\nОписать правила добавления новых методологий в базу.\n\n## Acceptance criteria\n- CONTRIBUTING.md обновлён\n- Описан процесс review\n- Зафиксированы требования к качеству\n",
+    "labels": ["governance", "docs"]
+  },
+  {
+    "title": "Define roadmap for v1.0 release",
+    "body": "## Description\nСформировать roadmap развития базы методологий до версии v1.0.\n\n## Acceptance criteria\n- Список методологий v1.0\n- Требования к стабильности\n- Критерии готовности\n",
+    "labels": ["roadmap", "planning"]
+  }
+]
