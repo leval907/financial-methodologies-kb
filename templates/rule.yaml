@@ -1,0 +1,16 @@
+id: <rule_id>
+methodology_id: <id>
+title: <Название правила>
+priority: 50
+
+if:
+  - indicator: <indicator_id>
+    op: "<lt|lte|gt|gte|eq|between>"
+    value: <число или диапазон>
+
+then:
+  actions:
+    - "<действие 1>"
+    - "<действие 2>"
+  expected_effect:
+    - "<какой эффект ждём>"

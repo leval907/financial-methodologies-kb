@@ -1,0 +1,20 @@
+id: <indicator_id>
+title: <Название показателя>
+methodology_id: <id>
+
+unit: <rub|days|percent|ratio|count>
+dimension: <flow|stock|ratio|margin|other>
+
+formula:
+  expression: "<текст формулы>"
+  inputs: [<input_id_1>, <input_id_2>]
+
+interpretation:
+  meaning: "<что означает>"
+  good: "<условие>"
+  warning: "<условие>"
+  bad: "<условие>"
+
+notes:
+  assumptions: []
+  pitfalls: []

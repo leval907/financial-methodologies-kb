@@ -1,0 +1,38 @@
+id: <id>
+title: <Название методологии>
+version: 0.1.0
+status: draft
+
+category: <cash_flow|profitability|working_capital|costs|pricing|investments|risk|other>
+level: <strategic|tactical|operational>
+audience: [owner, cfo, analyst, accountant]
+tags: [<tag1>, <tag2>]
+
+docs:
+  overview: docs/methodologies/<id>/README.md
+  model: docs/methodologies/<id>/model.md
+  workflow: docs/methodologies/<id>/workflow.md
+  decisions: docs/methodologies/<id>/decisions.md
+  pitfalls: docs/methodologies/<id>/pitfalls.md
+  examples: docs/methodologies/<id>/examples.md
+
+inputs:
+  - id: <input_id>
+    title: <что это>
+    required: true
+
+outputs:
+  - id: <output_id>
+    title: <что получаем>
+
+indicators:
+  - <indicator_id_1>
+  - <indicator_id_2>
+
+rules:
+  - <rule_id_1>
+  - <rule_id_2>
+
+relations:
+  related_methodologies: []
+  prerequisites: []
