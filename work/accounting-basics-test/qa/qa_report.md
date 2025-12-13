@@ -59,6 +59,64 @@
 - **[BLOCKER][schema]** '' should be non-empty
   - Evidence: `/structure/stages/20/description`
   - Fix: Fix Agent C output or schema mismatch.
+- **[BLOCKER][duplicates]** Duplicate indicator name 'валовая прибыль' found at 2 locations: ind_001, ind_010
+  - Evidence: `/structure/indicators/0 and 9`
+  - Snippet: `Normalized name: 'валовая прибыль' appears 2 times`
+  - Fix: Merge duplicate indicators or rename to distinguish different contexts.
+- **[BLOCKER][duplicates]** Duplicate indicator name 'вклад в формирование прибыли' found at 2 locations: ind_008, ind_019
+  - Evidence: `/structure/indicators/7 and 18`
+  - Snippet: `Normalized name: 'вклад в формирование прибыли' appears 2 times`
+  - Fix: Merge duplicate indicators or rename to distinguish different contexts.
+- **[BLOCKER][stage_order]** Stage 5 has order=1 but is not the first stage (broken numbering)
+  - Evidence: `/structure/stages/4/order`
+  - Snippet: `stage_005 order: 1, order_display: '5 (source order: 1)'`
+  - Fix: Agent C should renumber stages sequentially (1..N) or fix source order mapping.
+- **[BLOCKER][stage_order]** Stage 6 has order=1 but is not the first stage (broken numbering)
+  - Evidence: `/structure/stages/5/order`
+  - Snippet: `stage_006 order: 1, order_display: '6 (source order: 1)'`
+  - Fix: Agent C should renumber stages sequentially (1..N) or fix source order mapping.
+- **[BLOCKER][stage_order]** Stage 9 has order=1 but is not the first stage (broken numbering)
+  - Evidence: `/structure/stages/8/order`
+  - Snippet: `stage_009 order: 1, order_display: '9 (source order: 1)'`
+  - Fix: Agent C should renumber stages sequentially (1..N) or fix source order mapping.
+- **[BLOCKER][stage_order]** Stage 12 has order=1 but is not the first stage (broken numbering)
+  - Evidence: `/structure/stages/11/order`
+  - Snippet: `stage_012 order: 1, order_display: '12 (source order: 1)'`
+  - Fix: Agent C should renumber stages sequentially (1..N) or fix source order mapping.
+- **[BLOCKER][stage_order]** Stage 15 has order=1 but is not the first stage (broken numbering)
+  - Evidence: `/structure/stages/14/order`
+  - Snippet: `stage_015 order: 1, order_display: '15 (source order: 1)'`
+  - Fix: Agent C should renumber stages sequentially (1..N) or fix source order mapping.
+- **[BLOCKER][stage_order]** Stage 18 has order=1 but is not the first stage (broken numbering)
+  - Evidence: `/structure/stages/17/order`
+  - Snippet: `stage_018 order: 1, order_display: '18 (source order: 1)'`
+  - Fix: Agent C should renumber stages sequentially (1..N) or fix source order mapping.
+- **[BLOCKER][stage_order]** Stage 22 has order=1 but is not the first stage (broken numbering)
+  - Evidence: `/structure/stages/21/order`
+  - Snippet: `stage_022 order: 1, order_display: '22 (source order: 1)'`
+  - Fix: Agent C should renumber stages sequentially (1..N) or fix source order mapping.
+- **[BLOCKER][stage_order]** Stage 24 has order=1 but is not the first stage (broken numbering)
+  - Evidence: `/structure/stages/23/order`
+  - Snippet: `stage_024 order: 1, order_display: '24 (source order: 1)'`
+  - Fix: Agent C should renumber stages sequentially (1..N) or fix source order mapping.
+- **[BLOCKER][completeness]** All 21 indicators have empty formulas (methodology_type=analysis)
+  - Evidence: `/structure/indicators/*/formula`
+  - Snippet: `21/21 indicators with empty formula`
+  - Fix: Extract formulas from source text or mark methodology_type as 'planning' if formulas not applicable.
+
+## Major issues
+- **[MAJOR][stage_order]** Duplicate order=1 found at 9 stages: stage_001, stage_005, stage_006, stage_009, stage_012, stage_015, stage_018, stage_022, stage_024
+  - Evidence: `/structure/stages order=1`
+  - Fix: Ensure each stage has unique order value.
+- **[MAJOR][stage_order]** Duplicate order=2 found at 8 stages: stage_002, stage_007, stage_010, stage_013, stage_016, stage_019, stage_023, stage_025
+  - Evidence: `/structure/stages order=2`
+  - Fix: Ensure each stage has unique order value.
+- **[MAJOR][stage_order]** Duplicate order=3 found at 7 stages: stage_003, stage_008, stage_011, stage_014, stage_017, stage_020, stage_026
+  - Evidence: `/structure/stages order=3`
+  - Fix: Ensure each stage has unique order value.
+- **[MAJOR][stage_order]** Duplicate order=4 found at 2 stages: stage_004, stage_021
+  - Evidence: `/structure/stages order=4`
+  - Fix: Ensure each stage has unique order value.
 
 ## Next actions (pipeline)
 1. Fix BLOCKER/MAJOR issues in Agent B output or Agent C compilation.

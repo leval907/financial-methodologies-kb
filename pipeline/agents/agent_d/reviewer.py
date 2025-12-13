@@ -449,6 +449,309 @@ def precheck_formulas(compiled: Dict[str, Any]) -> Tuple[List[Issue], float]:
     return issues, ratio
 
 
+def precheck_duplicate_indicators(compiled: Dict[str, Any]) -> List[Issue]:
+    """
+    Check for duplicate indicator names (case-insensitive, normalized).
+    Returns BLOCKER issues for exact duplicates.
+    """
+    issues: List[Issue] = []
+    inds = ((compiled.get("structure", {}) or {}).get("indicators", []) or [])
+    if not isinstance(inds, list):
+        return []
+    
+    def normalize_name(name: str) -> str:
+        """Normalize: lowercase, strip, ё→е"""
+        return name.lower().strip().replace("ё", "е")
+    
+    seen: Dict[str, List[int]] = {}
+    for idx, ind in enumerate(inds):
+        if not isinstance(ind, dict):
+            continue
+        name = str(ind.get("name") or "").strip()
+        if not name:
+            continue
+        
+        norm_name = normalize_name(name)
+        if norm_name not in seen:
+            seen[norm_name] = []
+        seen[norm_name].append(idx)
+    
+    # Find duplicates
+    for norm_name, indices in seen.items():
+        if len(indices) > 1:
+            ids = [f"ind_{i+1:03d}" for i in indices]
+            issues.append(
+                Issue(
+                    id=f"DUP-IND-{indices[0]+1:03d}",
+                    severity="BLOCKER",
+                    category="duplicates",
+                    message=f"Duplicate indicator name '{norm_name}' found at {len(indices)} locations: {', '.join(ids)}",
+                    evidence={
+                        "pointer": f"/structure/indicators/{indices[0]} and {indices[1]}",
+                        "snippet": f"Normalized name: '{norm_name}' appears {len(indices)} times"
+                    },
+                    fix_hint="Merge duplicate indicators or rename to distinguish different contexts.",
+                )
+            )
+    
+    return issues
+
+
+def precheck_stage_order(compiled: Dict[str, Any]) -> List[Issue]:
+    """
+    Check stage order field for consistency:
+    - No duplicate order values
+    - No order=1 after stage_001 (broken numbering)
+    - Ideally sequential 1..N
+    """
+    issues: List[Issue] = []
+    stages = ((compiled.get("structure", {}) or {}).get("stages", []) or [])
+    if not isinstance(stages, list):
+        return []
+    
+    seen_orders: Dict[int, List[int]] = {}
+    for idx, stage in enumerate(stages):
+        if not isinstance(stage, dict):
+            continue
+        order = stage.get("order")
+        if order is None:
+            continue
+        
+        if not isinstance(order, int):
+            issues.append(
+                Issue(
+                    id=f"ORDER-TYPE-{idx+1:03d}",
+                    severity="MAJOR",
+                    category="stage_order",
+                    message=f"Stage {idx+1} has non-integer order: {order}",
+                    evidence={"pointer": f"/structure/stages/{idx}/order"},
+                    fix_hint="Ensure order is integer type.",
+                )
+            )
+            continue
+        
+        if order not in seen_orders:
+            seen_orders[order] = []
+        seen_orders[order].append(idx)
+        
+        # Check for order=1 not at stage_001
+        if order == 1 and idx > 0:
+            issues.append(
+                Issue(
+                    id=f"ORDER-RESET-{idx+1:03d}",
+                    severity="BLOCKER",
+                    category="stage_order",
+                    message=f"Stage {idx+1} has order=1 but is not the first stage (broken numbering)",
+                    evidence={
+                        "pointer": f"/structure/stages/{idx}/order",
+                        "snippet": f"stage_{idx+1:03d} order: {order}, order_display: '{stage.get('order_display', '')}'"
+                    },
+                    fix_hint="Agent C should renumber stages sequentially (1..N) or fix source order mapping.",
+                )
+            )
+    
+    # Check for duplicate orders
+    for order, indices in seen_orders.items():
+        if len(indices) > 1:
+            issues.append(
+                Issue(
+                    id=f"ORDER-DUP-{order:03d}",
+                    severity="MAJOR",
+                    category="stage_order",
+                    message=f"Duplicate order={order} found at {len(indices)} stages: {', '.join([f'stage_{i+1:03d}' for i in indices])}",
+                    evidence={"pointer": f"/structure/stages order={order}"},
+                    fix_hint="Ensure each stage has unique order value.",
+                )
+            )
+    
+    return issues
+
+
+def precheck_empty_formulas(compiled: Dict[str, Any], threshold: float = 0.7) -> List[Issue]:
+    """
+    Check if too many indicators have empty formulas.
+    For diagnostic/analysis methodologies, empty formulas reduce actionability.
+    
+    Args:
+        threshold: If ratio of empty formulas > threshold, raise MAJOR issue
+    """
+    issues: List[Issue] = []
+    inds = ((compiled.get("structure", {}) or {}).get("indicators", []) or [])
+    if not isinstance(inds, list) or len(inds) == 0:
+        return []
+    
+    methodology_type = compiled.get("classification", {}).get("methodology_type", "")
+    
+    # Only check for types that should have formulas
+    if methodology_type not in ["diagnostic", "analysis", "optimization"]:
+        return []
+    
+    empty_count = 0
+    total_count = len(inds)
+    
+    for ind in inds:
+        if not isinstance(ind, dict):
+            continue
+        formula = str(ind.get("formula") or "").strip()
+        if not formula:
+            empty_count += 1
+    
+    empty_ratio = empty_count / total_count if total_count > 0 else 0
+    
+    if empty_ratio >= 1.0:
+        # 100% empty formulas
+        issues.append(
+            Issue(
+                id="EMPTY-FORM-001",
+                severity="BLOCKER",
+                category="completeness",
+                message=f"All {total_count} indicators have empty formulas (methodology_type={methodology_type})",
+                evidence={
+                    "pointer": "/structure/indicators/*/formula",
+                    "snippet": f"{empty_count}/{total_count} indicators with empty formula"
+                },
+                fix_hint="Extract formulas from source text or mark methodology_type as 'planning' if formulas not applicable.",
+            )
+        )
+    elif empty_ratio > threshold:
+        issues.append(
+            Issue(
+                id="EMPTY-FORM-002",
+                severity="MAJOR",
+                category="completeness",
+                message=f"{empty_count}/{total_count} ({empty_ratio:.0%}) indicators have empty formulas (threshold={threshold:.0%})",
+                evidence={
+                    "pointer": "/structure/indicators/*/formula",
+                    "snippet": f"{empty_count} indicators without formulas"
+                },
+                fix_hint="Extract formulas from source text or reduce indicator count to only those with clear definitions.",
+            )
+        )
+    
+    return issues
+
+
+def precheck_readme_coverage(book_id: str, compiled: Dict[str, Any]) -> List[Issue]:
+    """
+    Check if README.md covers all stages.
+    README should list all stage titles or at least mention all stage_XXX IDs.
+    """
+    issues: List[Issue] = []
+    readme_path = DOCS_DIR / "methodologies" / book_id / "README.md"
+    
+    if not readme_path.exists():
+        return []  # Already caught by precheck_docs_consistency
+    
+    stages = ((compiled.get("structure", {}) or {}).get("stages", []) or [])
+    if not stages:
+        return []
+    
+    try:
+        readme_content = readme_path.read_text(encoding="utf-8").lower()
+    except Exception:
+        return []
+    
+    total_stages = len(stages)
+    found_count = 0
+    missing_stages = []
+    
+    for idx, stage in enumerate(stages):
+        if not isinstance(stage, dict):
+            continue
+        
+        stage_id = stage.get("id", f"stage_{idx+1:03d}")
+        title = str(stage.get("title") or "").strip().lower()
+        
+        # Check if stage_id or title appears in README
+        if stage_id.lower() in readme_content or (title and title in readme_content):
+            found_count += 1
+        else:
+            missing_stages.append(stage_id)
+    
+    coverage_ratio = found_count / total_stages if total_stages > 0 else 1.0
+    
+    if coverage_ratio < 0.5:
+        # Less than 50% stages covered
+        issues.append(
+            Issue(
+                id="README-COV-001",
+                severity="BLOCKER",
+                category="docs",
+                message=f"README.md covers only {found_count}/{total_stages} ({coverage_ratio:.0%}) stages",
+                evidence={
+                    "path": str(readme_path),
+                    "snippet": f"Missing stages: {', '.join(missing_stages[:5])}{'...' if len(missing_stages) > 5 else ''}"
+                },
+                fix_hint="Re-run Agent C to generate complete README with all stages.",
+            )
+        )
+    elif coverage_ratio < 0.8:
+        # 50-80% coverage
+        issues.append(
+            Issue(
+                id="README-COV-002",
+                severity="MAJOR",
+                category="docs",
+                message=f"README.md incomplete: {found_count}/{total_stages} ({coverage_ratio:.0%}) stages documented",
+                evidence={
+                    "path": str(readme_path),
+                    "snippet": f"Missing {len(missing_stages)} stages"
+                },
+                fix_hint="Complete README generation to include all stages.",
+            )
+        )
+    
+    return issues
+
+
+def precheck_duplicate_stage_titles(compiled: Dict[str, Any]) -> List[Issue]:
+    """
+    Check for duplicate stage titles (exact match after normalization).
+    This catches obvious copy-paste errors before LLM semantic analysis.
+    """
+    issues: List[Issue] = []
+    stages = ((compiled.get("structure", {}) or {}).get("stages", []) or [])
+    if not isinstance(stages, list):
+        return []
+    
+    def normalize_title(title: str) -> str:
+        """Normalize: lowercase, strip, ё→е, remove extra spaces"""
+        return re.sub(r'\s+', ' ', title.lower().strip().replace("ё", "е"))
+    
+    seen: Dict[str, List[int]] = {}
+    for idx, stage in enumerate(stages):
+        if not isinstance(stage, dict):
+            continue
+        title = str(stage.get("title") or "").strip()
+        if not title:
+            continue
+        
+        norm_title = normalize_title(title)
+        if norm_title not in seen:
+            seen[norm_title] = []
+        seen[norm_title].append(idx)
+    
+    # Find duplicates
+    for norm_title, indices in seen.items():
+        if len(indices) > 1:
+            ids = [f"stage_{i+1:03d}" for i in indices]
+            issues.append(
+                Issue(
+                    id=f"DUP-STAGE-{indices[0]+1:03d}",
+                    severity="MAJOR",
+                    category="duplicates",
+                    message=f"Duplicate stage title '{norm_title}' found at {len(indices)} locations: {', '.join(ids)}",
+                    evidence={
+                        "pointer": f"/structure/stages/{indices[0]} and {indices[1]}",
+                        "snippet": f"Title: '{norm_title}' appears {len(indices)} times"
+                    },
+                    fix_hint="Merge duplicate stages or rename to distinguish different contexts.",
+                )
+            )
+    
+    return issues
+
+
 # -----------------------------
 # LLM reasoning (Claude 3.5 Sonnet via Requesty)
 # -----------------------------
@@ -565,6 +868,22 @@ Output ONLY valid JSON, no additional text."""
                 text = content[0].get("text", "")
             else:
                 text = str(content)
+            
+            # Debug: print raw response
+            print(f"\n🔍 Claude response (first 500 chars):\n{text[:500]}\n", file=sys.stderr)
+            
+            # Try to extract JSON from markdown code blocks if present
+            if "```json" in text:
+                json_start = text.find("```json") + 7
+                json_end = text.find("```", json_start)
+                if json_end > json_start:
+                    text = text[json_start:json_end].strip()
+            elif "```" in text:
+                # Try generic code block
+                json_start = text.find("```") + 3
+                json_end = text.find("```", json_start)
+                if json_end > json_start:
+                    text = text[json_start:json_end].strip()
             
             # Parse JSON response
             result = json.loads(text)
@@ -871,7 +1190,27 @@ def main() -> int:
         issues.extend(docs_issues)
         print(f"   {'✅' if not docs_issues else '⚠️'} Docs: {len(docs_issues)} issues")
 
-        print("5️⃣ Glossary checks...")
+        print("5️⃣ Duplicate indicators...")
+        dup_ind_issues = precheck_duplicate_indicators(compiled)
+        issues.extend(dup_ind_issues)
+        print(f"   {'✅' if not dup_ind_issues else '⚠️'} Duplicates: {len(dup_ind_issues)} issues")
+
+        print("6️⃣ Stage order checks...")
+        order_issues = precheck_stage_order(compiled)
+        issues.extend(order_issues)
+        print(f"   {'✅' if not order_issues else '⚠️'} Stage order: {len(order_issues)} issues")
+
+        print("7️⃣ Duplicate stage titles...")
+        dup_stage_issues = precheck_duplicate_stage_titles(compiled)
+        issues.extend(dup_stage_issues)
+        print(f"   {'✅' if not dup_stage_issues else '⚠️'} Duplicate titles: {len(dup_stage_issues)} issues")
+
+        print("8️⃣ README coverage...")
+        readme_issues = precheck_readme_coverage(book_id, compiled)
+        issues.extend(readme_issues)
+        print(f"   {'✅' if not readme_issues else '⚠️'} README: {len(readme_issues)} issues")
+
+        print("9️⃣ Glossary checks...")
         glossary_terms = None
         if args.glossary:
             glossary_terms = load_glossary_terms(Path(args.glossary))
@@ -879,10 +1218,15 @@ def main() -> int:
         issues.extend(glossary_issues)
         print(f"   {'✅' if not glossary_issues else '⚠️'} Glossary: {len(glossary_issues)} issues, coverage={glossary_cov:.2%}")
 
-        print("6️⃣ Formula syntax...")
+        print("🔟 Formula syntax...")
         formula_issues, formula_ratio = precheck_formulas(compiled)
         issues.extend(formula_issues)
         print(f"   {'✅' if not formula_issues else '⚠️'} Formulas: {len(formula_issues)} issues, passed={formula_ratio:.2%}")
+
+        print("1️⃣1️⃣ Empty formulas check...")
+        empty_form_issues = precheck_empty_formulas(compiled, threshold=0.7)
+        issues.extend(empty_form_issues)
+        print(f"   {'✅' if not empty_form_issues else '⚠️'} Empty formulas: {len(empty_form_issues)} issues")
     else:
         glossary_cov = 1.0
         formula_ratio = 1.0
@@ -892,8 +1236,11 @@ def main() -> int:
     if docs_readme_path.exists():
         docs_readme = docs_readme_path.read_text(encoding="utf-8")
 
+    llm_issues: List[Issue] = []
+    llm_strengths: List[str] = []
+    
     if args.use_llm:
-        print("7️⃣ LLM reasoning (Claude Sonnet 4.5)...")
+        print("🤖 LLM reasoning (Claude Sonnet 4.5)...")
         requesty_api_key = os.getenv("REQUESTY_API_KEY")
         reviewer = LLMReviewer(requesty_api_key=requesty_api_key)
         llm_issues, llm_strengths = reviewer.review(
@@ -925,6 +1272,12 @@ def main() -> int:
             "schema_valid": schema_ok,
             "glossary_coverage": round(float(glossary_cov), 4),
             "formula_checks_passed": round(float(formula_ratio), 4),
+        },
+        "llm_findings": {
+            "enabled": args.use_llm,
+            "issues_found": len(llm_issues) if args.use_llm else 0,
+            "strengths_found": len(llm_strengths) if args.use_llm else 0,
+            "model": "claude-sonnet-4.5" if args.use_llm else None,
         },
         "generated_at": now_iso(),
         "reviewer": {
