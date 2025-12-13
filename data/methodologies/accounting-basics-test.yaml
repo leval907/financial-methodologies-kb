@@ -1,0 +1,301 @@
+metadata:
+  id: accounting-basics-test
+  title: accounting-basics-test
+  created_at: '2025-12-13T11:30:27.036002+00:00'
+  source:
+    work_outline: work/accounting-basics-test/outline.yaml
+    sources_metadata: null
+  agent_b_metadata:
+    agent: Agent B v1.0 (GigaChat + Qwen3-Max)
+    model_used: gigachat
+    chapters_processed: 11
+classification:
+  methodology_type: analysis
+structure:
+  stages:
+  - id: stage_001
+    title: Признание роли бухгалтерии
+    description: Осознание влияния бухгалтерии на прибыль компании и необходимость лучшего управления финансовыми показателями.
+    order: 1
+    order_display: '1 (source order: 1)'
+    source: null
+  - id: stage_002
+    title: Определение слабостей компании
+    description: Выявление проблем компании через недооценивание бухгалтерии и недостаточное внимание к финансовым данным.
+    order: 2
+    order_display: '2 (source order: 2)'
+    source: null
+  - id: stage_003
+    title: Применение методики простых чисел
+    description: Использование метода Грег Крэбтри для анализа финансовых показателей, оптимизации затрат и увеличения прибыли.
+    order: 3
+    order_display: '3 (source order: 3)'
+    source: null
+  - id: stage_004
+    title: Оценка производительности труда
+    description: Введение методики оценки эффективности сотрудников, позволяющей корректировать расходы на персонал и улучшать
+      бизнес-процессы.
+    order: 4
+    order_display: '4 (source order: 4)'
+    source: null
+  - id: stage_005
+    title: Создание каскадной диаграммы
+    description: построение графика выручки, прибыли и денежных потоков компании по различным категориям клиентов, местоположений,
+      продуктов и специалистов по продажам
+    order: 1
+    order_display: '5 (source order: 1)'
+    source: null
+  - id: stage_006
+    title: Сбор и подготовка данных
+    description: Получение актуальных данных о закупках и продажах, построение еженедельных графиков и визуализаций
+    order: 1
+    order_display: '6 (source order: 1)'
+    source: null
+  - id: stage_007
+    title: Анализ трендов
+    description: Изучение изменений объемов закупок клиентов и определение предупреждающих сигналов
+    order: 2
+    order_display: '7 (source order: 2)'
+    source: null
+  - id: stage_008
+    title: Корректировка стратегии
+    description: Реакция на изменения в спросе и предпочтениях клиентов, корректировка внутренней политики и стратегий
+    order: 3
+    order_display: '8 (source order: 3)'
+    source: null
+  - id: stage_009
+    title: Фокусировка на валовой прибыли
+    description: Переход от сосредоточенности на выручке к ориентации на валовую прибыль.
+    order: 1
+    order_display: '9 (source order: 1)'
+    source: null
+  - id: stage_010
+    title: Увеличение валовой прибыли
+    description: Повышение уровня валовой прибыли через продажу уникальных продуктов или увеличение расходов пропорционально
+      доходам.
+    order: 2
+    order_display: '10 (source order: 2)'
+    source: null
+  - id: stage_011
+    title: Установка правильных целей по прибыли
+    description: Формирование адекватных целевых показателей прибыли относительно выручки или валовой прибыли.
+    order: 3
+    order_display: '11 (source order: 3)'
+    source: null
+  - id: stage_012
+    title: Определение вида прибыли
+    description: Определить вид прибыли — относительную к валовой прибыли или выручке.
+    order: 1
+    order_display: '12 (source order: 1)'
+    source: null
+  - id: stage_013
+    title: Устранение искажений
+    description: Удалить возможные искажения в расчетах для корректного сравнения.
+    order: 2
+    order_display: '13 (source order: 2)'
+    source: null
+  - id: stage_014
+    title: Сравнение рентабельности
+    description: Провести сравнение рентабельности бизнеса с установленными уровнями.
+    order: 3
+    order_display: '14 (source order: 3)'
+    source: null
+  - id: stage_015
+    title: Определение категорий сотрудников
+    description: Выделение сотрудников по категориям на основе времени, затраченного на производственный процесс.
+    order: 1
+    order_display: '15 (source order: 1)'
+    source: null
+  - id: stage_016
+    title: Расчет вклада в формирование прибыли
+    description: Формирование показателя вклада работников производства и управленческого персонала в общий доход компании.
+    order: 2
+    order_display: '16 (source order: 2)'
+    source: null
+  - id: stage_017
+    title: Оптимизация затрат и анализа доходов
+    description: Замораживание текущих расходов и достижение целевых показателей рентабельности, начиная с 10% и стремясь
+      к 15% маржинальности.
+    order: 3
+    order_display: '17 (source order: 3)'
+    source: null
+  - id: stage_018
+    title: Шаг 1
+    description: ''
+    order: 1
+    order_display: '18 (source order: 1)'
+    source: null
+  - id: stage_019
+    title: Шаг 2
+    description: ''
+    order: 2
+    order_display: '19 (source order: 2)'
+    source: null
+  - id: stage_020
+    title: Шаг 3
+    description: ''
+    order: 3
+    order_display: '20 (source order: 3)'
+    source: null
+  - id: stage_021
+    title: Шаг 4
+    description: ''
+    order: 4
+    order_display: '21 (source order: 4)'
+    source: null
+  - id: stage_022
+    title: Расчет показателей прибыли и рентабельности
+    description: Вычисление операционной прибыли, вклада в формирование прибыли, прочих операционных затрат и уровней производительности
+      труда
+    order: 1
+    order_display: '22 (source order: 1)'
+    source: null
+  - id: stage_023
+    title: Сравнительный анализ уровней производительности
+    description: Сравнение уровней производительности труда непосредственного персонала, продаж и руководства между периодами
+    order: 2
+    order_display: '23 (source order: 2)'
+    source: null
+  - id: stage_024
+    title: Формирование групп сотрудников
+    description: Выделение отдельных групп специалистов, которым рассчитывается доля вклада в общую прибыль.
+    order: 1
+    order_display: '24 (source order: 1)'
+    source: null
+  - id: stage_025
+    title: Сокращение персонала
+    description: Во время падения производства компания снижала численность работников с низкой производительностью либо переводила
+      успешных сотрудников на сокращенный график работы.
+    order: 2
+    order_display: '25 (source order: 2)'
+    source: null
+  - id: stage_026
+    title: Гибкий график работы
+    description: Предоставление возможности некоторым сотрудникам работать неполный рабочий день (4 дня вместо 5), сохраняя
+      комфортную рабочую нагрузку.
+    order: 3
+    order_display: '26 (source order: 3)'
+    source: null
+  tools:
+  - id: tool_001
+    title: Каскадная диаграмма
+    type: chart
+    description: графическое представление финансовой структуры компании
+  - id: tool_002
+    title: Еженедельные графики объема закупок различных товаров разными клиентами
+    type: chart
+    description: Построенные еженедельные графики для анализа объемов закупок
+  - id: tool_003
+    title: Карты и программа Microsoft MapPoint
+    type: other
+    description: Использование карт для наглядного представления данных и выявления рыночных трендов
+  indicators:
+  - id: ind_001
+    name: валовая прибыль
+    description: Показатель эффективности команды продаж и стратегии развития компании.
+    formula: ''
+  - id: ind_002
+    name: цена продажи
+    description: Определяет динамику валовой прибыли в условиях рыночных изменений.
+    formula: ''
+  - id: ind_003
+    name: расходы компании
+    description: Соответствие затрат уровню цены продукции или услуги.
+    formula: ''
+  - id: ind_004
+    name: Операционная прибыль относительно выручки
+    description: Показатель рентабельности бизнеса, определяющий уровень жизнеспособности компании.
+    formula: ''
+  - id: ind_005
+    name: Непосредственная производительность труда
+    description: Отношение валовой прибыли к прямым затратам на оплату труда.
+    formula: ''
+  - id: ind_006
+    name: Производительность труда специалистов по продажам
+    description: Отношение вклада в формирование прибыли к стоимости оплаты труда специалистов по продажам.
+    formula: ''
+  - id: ind_007
+    name: Производительность труда руководства
+    description: Отношение вклада в формирование прибыли к стоимости оплаты труда руководства.
+    formula: ''
+  - id: ind_008
+    name: Вклад в формирование прибыли
+    description: Разница между валовой прибылью и прямыми затратами на оплату труда.
+    formula: ''
+  - id: ind_009
+    name: Рентабельность
+    description: Отношение чистой прибыли к общей выручке, выраженное в процентах.
+    formula: ''
+  - id: ind_010
+    name: Валовая прибыль
+    description: ''
+    formula: ''
+  - id: ind_011
+    name: Начальная прибыль
+    description: ''
+    formula: ''
+  - id: ind_012
+    name: Прибыль 10%
+    description: ''
+    formula: ''
+  - id: ind_013
+    name: Прибыль 15%
+    description: ''
+    formula: ''
+  - id: ind_014
+    name: Балансовая прибыль, процентов
+    description: ''
+    formula: ''
+  - id: ind_015
+    name: Прямые затраты на оплату труда руководства
+    description: ''
+    formula: ''
+  - id: ind_016
+    name: Прямые затраты на оплату труда специалистов по продажам
+    description: ''
+    formula: ''
+  - id: ind_017
+    name: Затраты на оплату труда
+    description: ''
+    formula: ''
+  - id: ind_018
+    name: операционная прибыль
+    description: Разница между доходами и операционными расходами компании
+    formula: ''
+  - id: ind_019
+    name: вклад в формирование прибыли
+    description: Доля выручки, формирующая операционную прибыль
+    formula: ''
+  - id: ind_020
+    name: прочие операционные затраты
+    description: Затраты, непосредственно не относящиеся к основной деятельности предприятия
+    formula: ''
+  - id: ind_021
+    name: уровни производительности труда
+    description: Отношение объема произведенной продукции или оказанных услуг к количеству затраченного рабочего времени
+    formula: ''
+  rules:
+  - id: rule_001
+    condition: если компания ориентируется на высокую долю валовой прибыли больше 40%
+    action: целевые показатели прибыли устанавливаются исходя из валовой прибыли
+    severity: high
+  - id: rule_002
+    condition: если доля валовой прибыли менее 40%
+    action: целевые показатели прибыли устанавливаются исходя из доли выручки
+    severity: high
+  - id: rule_003
+    condition: использование системы вознаграждений продавцов
+    action: вознаграждение привязывается к валовой прибыли, а не выручке, кроме случаев постоянной цены товара
+    severity: high
+  - id: rule_004
+    condition: Если расходы превышают установленный уровень
+    action: Остановить дальнейшие инвестиции, заморозить затраты до достижения целевого уровня рентабельности.
+    severity: high
+  - id: rule_005
+    condition: Если достигнут целевой уровень рентабельности в 10%
+    action: Осмотреть команду и проверить наличие людей, устающих или теряющих мотивацию.
+    severity: medium
+  - id: rule_006
+    condition: Если достигнут целевой уровень рентабельности в 15%
+    action: Рассмотреть возможность увеличения фонда оплаты труда или найма новых сотрудников.
+    severity: medium

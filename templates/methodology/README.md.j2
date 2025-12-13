@@ -1,0 +1,15 @@
+# {{ title }}
+
+## Тип методологии
+- **methodology_type:** {{ methodology_type }}
+
+## Этапы
+{% for s in stages %}
+{{ loop.index }}. **{{ s.title }}** — {{ s.description }}
+{% endfor %}
+
+## Разделы
+- Этапы: `./stages/`
+- Инструменты: `./tools/`
+- Показатели: `./indicators/`
+- Правила: `./rules/`
