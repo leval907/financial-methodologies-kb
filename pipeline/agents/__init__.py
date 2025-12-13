@@ -16,8 +16,9 @@ from .agent_a import DocumentExtractorV2, QualityMetricsCalculator, BlocksConver
 # Agent B: Outline Builder  
 from .agent_b import OutlineBuilder
 
-# Agent C: Compiler
-from .agent_c import MethodologyCompiler
+# Agent C: Compiler (в подпапке agent_c_v2)
+# NOTE: Импорты закомментированы, чтобы не ломать agent_e
+# from .agent_c_v2.compiler import MethodologyCompiler
 
 # Legacy (для обратной совместимости)
 from .extractor import DocumentExtractor
