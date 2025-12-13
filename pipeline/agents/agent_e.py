@@ -62,17 +62,8 @@ class AgentE:
         Args:
             base_dir: Base directory of the project (defaults to repo root)
         """
-        # Agent E находится в pipeline/agents/agent_e/, нужно подняться на 3 уровня
-        if base_dir:
-            self.base_dir = Path(base_dir)
-        else:
-            # __file__ = .../pipeline/agents/agent_e/__main__.py
-            # parent = .../pipeline/agents/agent_e
-            # parent.parent = .../pipeline/agents
-            # parent.parent.parent = .../pipeline
-            # parent.parent.parent.parent = корень репо
-            self.base_dir = Path(__file__).parent.parent.parent.parent.absolute()
-        
+        # Agent E находится в pipeline/agents/, base_dir - это корень репо
+        self.base_dir = Path(base_dir) if base_dir else Path(__file__).parent.parent.parent.absolute()
         self.data_dir = self.base_dir / "data"
         self.methodologies_dir = self.data_dir / "methodologies"
         self.qa_dir = self.data_dir / "qa"
@@ -81,13 +72,9 @@ class AgentE:
         # Create published dir if not exists
         self.published_dir.mkdir(parents=True, exist_ok=True)
         
-        # DB client создается лениво в _ensure_db_client()
-        self.db_client = None
-    
-    def _ensure_db_client(self):
-        """Lazy initialization of DB client (после загрузки .env в main())"""
-        if self.db_client is None:
-            self.db_client = ArangoDBClient(base_dir=str(self.base_dir))
+        # Load env and create ArangoDB client
+        load_dotenv(self.base_dir / '.env.arango')
+        self.db_client = ArangoDBClient(base_dir=str(self.base_dir))
     
     def load_methodology_yaml(self, yaml_path: Path) -> Dict[str, Any]:
         """Load and validate methodology YAML"""
@@ -97,30 +84,8 @@ class AgentE:
         if not data:
             raise ValueError(f"Empty YAML file: {yaml_path}")
         
-        # Поддерживаем два формата:
-        # 1) Старый: methodology_id в корне
-        # 2) Новый (Agent C): metadata.id в корне
-        if 'methodology_id' in data:
-            methodology_id = data['methodology_id']
-        elif 'metadata' in data and 'id' in data['metadata']:
-            methodology_id = data['metadata']['id']
-            # Копируем id в корень для единообразия
-            data['methodology_id'] = methodology_id
-        else:
-            raise ValueError(f"Missing methodology_id or metadata.id in {yaml_path}")
-        
-        # Нормализуем структуру: переносим classification.* в корень
-        if 'classification' in data:
-            data.setdefault('methodology_type', data['classification'].get('methodology_type', ''))
-        
-        # Нормализуем stages: structure.stages -> stages
-        if 'structure' in data and 'stages' in data['structure']:
-            data['stages'] = data['structure']['stages']
-        
-        # Добавляем поля из metadata если отсутствуют
-        if 'metadata' in data:
-            data.setdefault('title', data['metadata'].get('title', ''))
-            data.setdefault('description', data['metadata'].get('description', ''))
+        if 'methodology_id' not in data:
+            raise ValueError(f"Missing methodology_id in {yaml_path}")
         
         return data
     
@@ -241,8 +206,7 @@ class AgentE:
         rule_counter = 1
         
         for stage in method_data.get('stages', []):
-            # Agent C пишет 'id' в структуре, но для обратной совместимости проверяем оба
-            stage_id = stage.get('id') or stage.get('stage_id', f"stage_{stage.get('order', 1):03d}")
+            stage_id = stage.get('stage_id', f"stage_{stage.get('order', 1):03d}")
             
             # Stage document
             stage_doc = {
@@ -360,7 +324,7 @@ class AgentE:
         rule_counter = 0
         
         for stage in method_data.get('stages', []):
-            stage_id = stage.get('id') or stage.get('stage_id', f"stage_{stage.get('order', 1):03d}")
+            stage_id = stage.get('stage_id', f"stage_{stage.get('order', 1):03d}")
             stage_key = stage_index.get(stage_id)
             
             if not stage_key:
@@ -444,7 +408,6 @@ class AgentE:
             print(f"⚠️  Skipping QA check (forced publish)")
         
         # 3) Connect to ArangoDB
-        self._ensure_db_client()
         self.db_client.connect()
         print(f"✅ Connected to ArangoDB")
         
@@ -502,12 +465,6 @@ class AgentE:
 
 def main():
     """CLI для Agent E"""
-    # Загружаем .env.arango ДО создания AgentE (override=True!)
-    from pathlib import Path
-    env_path = Path(__file__).parent.parent.parent.parent / '.env.arango'
-    if env_path.exists():
-        load_dotenv(env_path, override=True)  # ВАЖНО: override=True!
-    
     parser = argparse.ArgumentParser(description="Agent E: Graph DB Publisher")
     parser.add_argument("methodology_id", help="ID методологии для публикации")
     parser.add_argument("--skip-qa", action="store_true", help="Пропустить проверку QA approval")

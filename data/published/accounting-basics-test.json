@@ -1,22 +1,22 @@
 {
   "methodology_id": "accounting-basics-test",
-  "published_at": "2025-12-13T14:57:01.356745+00:00",
+  "published_at": "2025-12-13T15:19:36.205460+00:00",
   "agent": "Agent E v1.0",
   "source_yaml": "data/methodologies/accounting-basics-test.yaml",
   "compiled_hash": null,
-  "qa_approved": false,
+  "qa_approved": true,
   "entities": {
     "entities": {
       "methodologies": {
         "upserted": 1,
-        "inserted": 1,
-        "updated": 0,
+        "inserted": 0,
+        "updated": 1,
         "errors": 0
       },
       "stages": {
         "upserted": 26,
-        "inserted": 4,
-        "updated": 22,
+        "inserted": 0,
+        "updated": 26,
         "errors": 0
       }
     },
@@ -26,8 +26,8 @@
     "edges": {
       "methodology_has_stage": {
         "upserted": 26,
-        "inserted": 4,
-        "updated": 22,
+        "inserted": 0,
+        "updated": 26,
         "errors": 0,
         "created_glossary_stubs": 0
       }
