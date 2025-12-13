@@ -1,0 +1,48 @@
+{
+  "agent": "agent_g_glossary_sync",
+  "glossary_dir": "data/glossary",
+  "source": {
+    "repo": "financial-methodologies-kb",
+    "ref": "main",
+    "path": "data/glossary",
+    "agent": "agent_g_glossary_sync"
+  },
+  "loaded_terms": 25,
+  "prepared_docs": 25,
+  "errors": [],
+  "dry_run": false,
+  "timestamp": "2025-12-13T15:37:33.711245+00:00",
+  "result": {
+    "upsert_entities": {
+      "entities": {
+        "glossary_terms": {
+          "upserted": 25,
+          "inserted": 0,
+          "updated": 25,
+          "errors": 0
+        }
+      },
+      "qa_warnings_count": 0
+    },
+    "qa_warnings_count": 0,
+    "reconciliation": {
+      "total_stubs": 2,
+      "matched": 0,
+      "unmatched": 2,
+      "updated_count": 0,
+      "matched_details": [],
+      "unknown_terms": [
+        {
+          "stub_id": "test_term_auto",
+          "stub_name": "Тестовый термин",
+          "status": "unknown_term"
+        },
+        {
+          "stub_id": "test_term_fixed",
+          "stub_name": "Тестовый термин (исправлен)",
+          "status": "unknown_term"
+        }
+      ]
+    }
+  }
+}
