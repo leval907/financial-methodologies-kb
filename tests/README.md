@@ -37,10 +37,44 @@ python tests/test_agent_b.py
 - `work/accounting-basics-test/outline.yaml`
 - `work/accounting-basics-test/outline.json`
 
+### Agent C (Compiler)
+
+```bash
+# Из корня проекта
+python tests/test_agent_c.py
+```
+
+**Что тестирует:**
+- Загрузка outline.yaml
+- Генерация README.md для методологии
+- Генерация документации для этапов (stages/*.md)
+- Генерация документации для инструментов (tools/*.md)
+- Генерация документации для показателей (indicators/*.md)
+- Сохранение YAML в data/
+
+**Требуется:**
+- GigaChat API key (для GigaChat Lite)
+- Requesty AI API key (fallback: Qwen3-Max)
+- Входной файл: `work/accounting-basics-test/outline.yaml`
+
+**Результат:**
+- `docs/methodologies/accounting-basics/README.md`
+- `docs/methodologies/accounting-basics/stages/*.md`
+- `docs/methodologies/accounting-basics/tools/*.md`
+- `docs/methodologies/accounting-basics/indicators/*.md`
+- `data/methodologies/accounting-basics.yaml`
+
 ## Конфигурация
 
 Переменные окружения (`.env` в корне):
 ```bash
-GIGACHAT_API_KEY=MDE5...
+GIGACHAT_CREDENTIALS=MDE5...
 REQUESTY_API_KEY=rqsty-sk-...
+```
+
+## Полный pipeline
+
+Запуск Agent B → Agent C:
+```bash
+python tests/test_agent_b.py && python tests/test_agent_c.py
 ```

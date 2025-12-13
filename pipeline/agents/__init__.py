@@ -16,6 +16,9 @@ from .agent_a import DocumentExtractorV2, QualityMetricsCalculator, BlocksConver
 # Agent B: Outline Builder  
 from .agent_b import OutlineBuilder
 
+# Agent C: Compiler
+from .agent_c import MethodologyCompiler
+
 # Legacy (для обратной совместимости)
 from .extractor import DocumentExtractor
 
@@ -27,6 +30,9 @@ __all__ = [
     
     # Agent B
     'OutlineBuilder',
+    
+    # Agent C
+    'MethodologyCompiler',
     
     # Legacy
     'DocumentExtractor',
