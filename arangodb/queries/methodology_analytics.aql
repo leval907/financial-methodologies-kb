@@ -1,0 +1,61 @@
+// Аналитика по всем методологиям
+//
+// Returns:
+//   Статистика по типам методологий, количеству элементов, и т.д.
+
+LET total_methodologies = LENGTH(FOR m IN methodologies RETURN 1)
+
+LET by_type = (
+  FOR m IN methodologies
+    COLLECT type = m.methodology_type WITH COUNT INTO count
+    RETURN {
+      type: type,
+      count: count,
+      percentage: ROUND(count / total_methodologies * 100, 2)
+    }
+)
+
+LET avg_stages = ROUND(AVG(
+  FOR m IN methodologies
+    RETURN m.metadata.total_stages
+), 2)
+
+LET avg_indicators = ROUND(AVG(
+  FOR m IN methodologies
+    RETURN m.metadata.total_indicators
+), 2)
+
+LET top_methodologies = (
+  FOR m IN methodologies
+    SORT m.qa.score DESC
+    LIMIT 10
+    RETURN {
+      id: m.methodology_id,
+      title: m.title,
+      score: m.qa.score,
+      stages: m.metadata.total_stages
+    }
+)
+
+LET most_complex = (
+  FOR m IN methodologies
+    SORT m.metadata.total_stages DESC
+    LIMIT 5
+    RETURN {
+      id: m.methodology_id,
+      title: m.title,
+      stages: m.metadata.total_stages,
+      indicators: m.metadata.total_indicators
+    }
+)
+
+RETURN {
+  total_methodologies: total_methodologies,
+  by_type: by_type,
+  averages: {
+    stages: avg_stages,
+    indicators: avg_indicators
+  },
+  top_by_quality: top_methodologies,
+  most_complex: most_complex
+}

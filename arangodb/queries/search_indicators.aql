@@ -1,0 +1,49 @@
+// Полнотекстовый поиск показателей
+//
+// Parameters:
+//   @search_term - термин для поиска (например: "прибыль")
+//
+// Returns:
+//   Список показателей с информацией о методологиях где они используются
+
+FOR indicator IN FULLTEXT(indicators, "name", @search_term)
+  
+  LET used_in_stages = (
+    FOR stage IN INBOUND indicator stage_indicators
+      LET methodology = FIRST(
+        FOR m IN INBOUND stage methodology_stages
+          RETURN m
+      )
+      RETURN {
+        stage_id: stage.stage_id,
+        stage_title: stage.title,
+        methodology_id: methodology.methodology_id,
+        methodology_title: methodology.title
+      }
+  )
+  
+  LET depends_on = (
+    FOR dep IN OUTBOUND indicator indicator_dependencies
+      RETURN {
+        indicator_id: dep.indicator_id,
+        name: dep.name
+      }
+  )
+  
+  LET used_by = (
+    FOR dep IN INBOUND indicator indicator_dependencies
+      RETURN {
+        indicator_id: dep.indicator_id,
+        name: dep.name
+      }
+  )
+  
+  RETURN {
+    indicator_id: indicator.indicator_id,
+    name: indicator.name,
+    description: indicator.description,
+    formula: indicator.formula,
+    used_in: used_in_stages,
+    depends_on: depends_on,
+    used_by: used_by
+  }

@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Glossary Term Document",
+  "description": "Схема для коллекции glossary_terms в ArangoDB - канонические термины",
+  "type": "object",
+  "required": ["_key", "term_id", "name", "definition", "status"],
+  "properties": {
+    "_key": {
+      "type": "string",
+      "description": "Уникальный ключ = term_id (например: term_001)",
+      "pattern": "^term_\\d{3}$"
+    },
+    "term_id": {
+      "type": "string",
+      "description": "Стабильный ID термина",
+      "pattern": "^term_\\d{3}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Каноническое название термина"
+    },
+    "definition": {
+      "type": "string",
+      "description": "Определение термина"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Альтернативные названия, синонимы"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "deprecated", "needs_definition", "draft"],
+      "description": "Статус термина"
+    },
+    "version": {
+      "type": "string",
+      "description": "Версия определения (для отслеживания изменений)",
+      "pattern": "^\\d+\\.\\d+$",
+      "examples": ["1.0", "2.1"]
+    },
+    "category": {
+      "type": "string",
+      "description": "Категория термина",
+      "examples": ["financial_indicator", "methodology_type", "accounting_concept"]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Теги для группировки"
+    },
+    "source": {
+      "type": "object",
+      "description": "Источник определения",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["book", "standard", "internal", "expert"],
+          "description": "Тип источника"
+        },
+        "book_id": {
+          "type": "string",
+          "description": "ID книги (если source.type=book)"
+        },
+        "reference": {
+          "type": "string",
+          "description": "Ссылка на источник"
+        },
+        "page": {
+          "type": "integer",
+          "description": "Страница в источнике"
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Примеры использования термина"
+    },
+    "related_terms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Связанные термины (term_id)"
+    },
+    "content_text": {
+      "type": "string",
+      "description": "Нормализованный текст для поиска/эмбеддинга"
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "SHA256 хэш content_text для детекта изменений"
+    },
+    "embedding_ref": {
+      "type": ["string", "null"],
+      "description": "Ссылка на embeddings/<id> или null"
+    },
+    "embedding_model": {
+      "type": ["string", "null"],
+      "description": "Модель для embedding (например: text-embedding-3-small)"
+    },
+    "embedding_dim": {
+      "type": ["integer", "null"],
+      "description": "Размерность вектора"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

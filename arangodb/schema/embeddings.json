@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Embedding Document",
+  "description": "Коллекция для хранения vector embeddings отдельно от сущностей",
+  "type": "object",
+  "required": ["_key", "vector", "model", "dim", "created_at"],
+  "properties": {
+    "_key": {
+      "type": "string",
+      "description": "Уникальный ключ embedding (автогенерируется или entity_type_entity_id)",
+      "examples": ["emb_methodology_accounting-basics", "emb_term_001"]
+    },
+    "vector": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Vector embedding (float array)"
+    },
+    "model": {
+      "type": "string",
+      "description": "Модель использованная для генерации",
+      "examples": ["text-embedding-3-small", "text-embedding-3-large", "cohere-embed-multilingual-v3.0"]
+    },
+    "dim": {
+      "type": "integer",
+      "description": "Размерность вектора",
+      "examples": [1536, 3072, 1024]
+    },
+    "source_entity_type": {
+      "type": "string",
+      "enum": ["methodology", "stage", "tool", "indicator", "rule", "glossary_term", "chunk"],
+      "description": "Тип сущности для которой embedding"
+    },
+    "source_entity_id": {
+      "type": "string",
+      "description": "ID исходной сущности"
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "SHA256 хэш исходного content_text (для валидации актуальности)"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "token_count": {"type": "integer"},
+        "generation_time_ms": {"type": "number"},
+        "cost_usd": {"type": "number"}
+      }
+    }
+  }
+}

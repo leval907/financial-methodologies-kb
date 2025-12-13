@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Methodology Document",
+  "description": "Схема для коллекции methodologies в ArangoDB",
+  "type": "object",
+  "required": ["_key", "methodology_id", "title", "methodology_type"],
+  "properties": {
+    "_key": {
+      "type": "string",
+      "description": "Уникальный ключ документа (например: accounting-basics)",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "methodology_id": {
+      "type": "string",
+      "description": "ID методологии из compiled YAML",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Название методологии"
+    },
+    "methodology_type": {
+      "type": "string",
+      "enum": [
+        "diagnostic",
+        "analysis",
+        "optimization",
+        "transformation",
+        "planning",
+        "execution",
+        "monitoring",
+        "mixed"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата создания методологии"
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "book_id": {
+          "type": "string",
+          "description": "ID исходной книги"
+        },
+        "book_title": {
+          "type": "string",
+          "description": "Название книги"
+        },
+        "extraction_date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "agent_b_model": {
+          "type": "string",
+          "description": "Модель использованная Agent B"
+        },
+        "total_stages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_tools": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_indicators": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_rules": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "description": "Результаты QA проверки Agent D",
+      "properties": {
+        "approved": {
+          "type": "boolean"
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "issues_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Теги для поиска"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата публикации в базу"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "qa_pending", "qa_approved", "qa_failed", "published", "deprecated"],
+      "description": "Статус методологии в pipeline"
+    },
+    "source": {
+      "type": "object",
+      "description": "Lineage: откуда эта сущность",
+      "properties": {
+        "repo": {"type": "string"},
+        "ref": {"type": "string", "description": "commit hash или tag"},
+        "path": {"type": "string"},
+        "pipeline_version": {"type": "string"}
+      }
+    },
+    "compiled_hash": {
+      "type": "string",
+      "description": "SHA256 хэш compiled YAML для детекта изменений"
+    },
+    "content_text": {
+      "type": "string",
+      "description": "Нормализованный текст для поиска/эмбеддинга (title + описание)"
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "SHA256 хэш content_text для детекта изменений"
+    },
+    "embedding_ref": {
+      "type": ["string", "null"],
+      "description": "Ссылка на embedding document (embeddings/<id>) или null"
+    },
+    "embedding_model": {
+      "type": ["string", "null"],
+      "description": "Модель для embedding (например: text-embedding-3-small)"
+    },
+    "embedding_dim": {
+      "type": ["integer", "null"],
+      "description": "Размерность вектора"
+    }
+  }
+}

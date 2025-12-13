@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Chunk Document",
+  "description": "Схема для коллекции chunks - куски текста для RAG (опционально)",
+  "type": "object",
+  "required": ["_key", "chunk_id", "text", "source_type", "source_id"],
+  "properties": {
+    "_key": {
+      "type": "string",
+      "description": "Уникальный ключ = chunk_id",
+      "pattern": "^chunk_\\d{6}$"
+    },
+    "chunk_id": {
+      "type": "string",
+      "description": "ID чанка",
+      "pattern": "^chunk_\\d{6}$"
+    },
+    "text": {
+      "type": "string",
+      "description": "Текст чанка (нормализованный)"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": ["methodology", "stage", "tool", "indicator", "rule", "glossary_term"],
+      "description": "Тип исходного документа"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "ID исходного документа"
+    },
+    "position": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Позиция чанка в исходном тексте"
+    },
+    "chunk_size": {
+      "type": "integer",
+      "description": "Размер чанка в символах"
+    },
+    "overlap": {
+      "type": "integer",
+      "description": "Размер перекрытия с соседними чанками"
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "SHA256 хэш текста"
+    },
+    "embedding": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "number"
+      },
+      "description": "Vector embedding"
+    },
+    "embedding_model": {
+      "type": ["string", "null"]
+    },
+    "embedding_dim": {
+      "type": ["integer", "null"]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Дополнительные метаданные (заголовок секции, теги и т.д.)"
+    }
+  }
+}

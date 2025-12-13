@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Edge Collections Schemas",
+  "description": "Схемы для всех edge-коллекций с обязательными полями lineage и relation_type",
+  "definitions": {
+    "methodology_has_stage": {
+      "description": "Связь: методология → этап",
+      "type": "object",
+      "required": ["_from", "_to", "order", "created_at"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^methodologies/[a-z0-9-]+$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^stages/stage_\\d{3}$"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Порядок этапа в методологии (1, 2, 3...)"
+        },
+        "source": {
+          "type": "object",
+          "description": "Lineage: откуда эта связь",
+          "properties": {
+            "repo": {"type": "string"},
+            "ref": {"type": "string", "description": "commit hash или tag"},
+            "path": {"type": "string"},
+            "agent": {"type": "string", "description": "Agent B, Agent C, etc"}
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "stage_uses_tool": {
+      "description": "Связь: этап → инструмент",
+      "type": "object",
+      "required": ["_from", "_to", "usage_type"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^stages/stage_\\d{3}$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^tools/tool_\\d{3}$"
+        },
+        "usage_type": {
+          "type": "string",
+          "enum": ["required", "optional", "recommended"],
+          "description": "Обязательность использования"
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "stage_uses_indicator": {
+      "description": "Связь: этап → показатель",
+      "type": "object",
+      "required": ["_from", "_to"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^stages/stage_\\d{3}$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^indicators/ind_\\d{3}$"
+        },
+        "calculation_priority": {
+          "type": "integer",
+          "description": "Приоритет расчета (если показатели зависимы)"
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "stage_has_rule": {
+      "description": "Связь: этап → правило",
+      "type": "object",
+      "required": ["_from", "_to"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^stages/stage_\\d{3}$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^rules/rule_\\d{3}$"
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "indicator_depends_on": {
+      "description": "Связь: показатель → показатель (зависимость в формуле или логике)",
+      "type": "object",
+      "required": ["_from", "_to", "dependency_type"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^indicators/ind_\\d{3}$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^indicators/ind_\\d{3}$"
+        },
+        "dependency_type": {
+          "type": "string",
+          "enum": ["formula", "logical", "temporal"],
+          "description": "Тип зависимости"
+        },
+        "formula_snippet": {
+          "type": "string",
+          "description": "Фрагмент формулы показывающий зависимость"
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "methodology_uses_term": {
+      "description": "Связь: методология → термин (единая edge с полем relation_type)",
+      "type": "object",
+      "required": ["_from", "_to", "relation_type"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^methodologies/[a-z0-9-]+$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^glossary_terms/term_\\d{3}$"
+        },
+        "relation_type": {
+          "type": "string",
+          "enum": ["defines", "uses", "mentions"],
+          "description": "Тип использования термина"
+        },
+        "occurrences": {
+          "type": "integer",
+          "description": "Количество упоминаний"
+        },
+        "context": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Контексты использования (snippets)"
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "stage_uses_term": {
+      "description": "Связь: этап → термин",
+      "type": "object",
+      "required": ["_from", "_to", "relation_type"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^stages/stage_\\d{3}$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^glossary_terms/term_\\d{3}$"
+        },
+        "relation_type": {
+          "type": "string",
+          "enum": ["defines", "uses", "mentions"]
+        },
+        "occurrences": {"type": "integer"},
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "indicator_uses_term": {
+      "description": "Связь: показатель → термин",
+      "type": "object",
+      "required": ["_from", "_to", "relation_type"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^indicators/ind_\\d{3}$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^glossary_terms/term_\\d{3}$"
+        },
+        "relation_type": {
+          "type": "string",
+          "enum": ["uses", "mentions"]
+        },
+        "used_in": {
+          "type": "string",
+          "enum": ["name", "description", "formula"],
+          "description": "Где использован термин"
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "tool_uses_term": {
+      "description": "Связь: инструмент → термин",
+      "type": "object",
+      "required": ["_from", "_to", "relation_type"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^tools/tool_\\d{3}$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^glossary_terms/term_\\d{3}$"
+        },
+        "relation_type": {
+          "type": "string",
+          "enum": ["uses", "mentions"]
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "term_relates_to": {
+      "description": "Связь: термин → термин (единая edge с полем relation_type)",
+      "type": "object",
+      "required": ["_from", "_to", "relation_type"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^glossary_terms/term_\\d{3}$"
+        },
+        "_to": {
+          "type": "string",
+          "pattern": "^glossary_terms/term_\\d{3}$"
+        },
+        "relation_type": {
+          "type": "string",
+          "enum": ["synonym", "related", "antonym", "broader", "narrower"],
+          "description": "Тип семантической связи"
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Сила связи (0-1)"
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "chunk_of": {
+      "description": "Связь: chunk → исходный документ",
+      "type": "object",
+      "required": ["_from", "_to"],
+      "properties": {
+        "_from": {
+          "type": "string",
+          "pattern": "^chunks/chunk_\\d{6}$"
+        },
+        "_to": {
+          "type": "string",
+          "description": "Любой документ из: methodologies/stages/tools/indicators/rules/glossary_terms"
+        },
+        "position": {
+          "type": "integer",
+          "description": "Позиция чанка в исходном документе"
+        },
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  },
+  "notes": {
+    "relation_type_pattern": "Вместо множества edge-коллекций (*_defines_term, *_uses_term, *_mentions_term) используем единую edge с полем relation_type",
+    "created_at": "Обязательное поле для всех edges (lineage + audit)",
+    "source": "Опциональное поле для lineage (repo, ref, path, agent)"
+  }
+}

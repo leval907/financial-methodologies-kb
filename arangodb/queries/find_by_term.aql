@@ -1,0 +1,116 @@
+// Найти все методологии и этапы, где используется термин
+//
+// Parameters:
+//   @term_name - название термина (поддерживает aliases)
+//
+// Returns:
+//   Термин + список методологий и этапов где он используется
+
+// 1. Найти термин (по name или aliases)
+LET term = FIRST(
+  FOR t IN glossary_terms
+    FILTER t.name == @term_name OR @term_name IN t.aliases
+    RETURN t
+)
+
+// Если термин не найден
+FILTER term != null
+
+// 2. Найти методологии где используется термин (через relation_type)
+LET methodologies_using = (
+  FOR edge IN methodology_uses_term
+    FILTER edge._to == term._id
+    LET m = DOCUMENT(edge._from)
+    RETURN {
+      methodology_id: m.methodology_id,
+      title: m.title,
+      methodology_type: m.methodology_type,
+      relation_type: edge.relation_type,
+      occurrences: edge.occurrences
+    }
+)
+
+// 3. Найти этапы где используется термин
+LET stages_using = (
+  FOR edge IN stage_uses_term
+    FILTER edge._to == term._id
+    LET s = DOCUMENT(edge._from)
+    // Найти методологию этого этапа
+    LET methodology = FIRST(
+      FOR m_edge IN methodology_has_stage
+        FILTER m_edge._to == s._id
+        LET m = DOCUMENT(m_edge._from)
+        RETURN {
+          methodology_id: m.methodology_id,
+          title: m.title
+        }
+    )
+    RETURN {
+      stage_id: s.stage_id,
+      stage_title: s.title,
+      relation_type: edge.relation_type,
+      occurrences: edge.occurrences,
+      methodology: methodology
+    }
+)
+
+// 4. Найти показатели где используется термин
+LET indicators_using = (
+  FOR edge IN indicator_uses_term
+    FILTER edge._to == term._id
+    LET i = DOCUMENT(edge._from)
+    // Найти в каких этапах используется показатель
+    LET in_stages = (
+      FOR s_edge IN stage_uses_indicator
+        FILTER s_edge._to == i._id
+        LET s = DOCUMENT(s_edge._from)
+        LET m_edge = FIRST(
+          FOR me IN methodology_has_stage
+            FILTER me._to == s._id
+            RETURN me
+        )
+        LET m = DOCUMENT(m_edge._from)
+        RETURN {
+          stage_id: s.stage_id,
+          methodology_id: m.methodology_id
+        }
+    )
+    RETURN {
+      indicator_id: i.indicator_id,
+      name: i.name,
+      relation_type: edge.relation_type,
+      used_in: edge.used_in,
+      in_stages: in_stages
+    }
+)
+
+// 5. Связанные термины (через relation_type)
+LET related_terms = (
+  FOR edge IN term_relates_to
+    FILTER edge._from == term._id
+    LET related = DOCUMENT(edge._to)
+    RETURN {
+      term_id: related.term_id,
+      name: related.name,
+      relation_type: edge.relation_type,
+      strength: edge.strength
+    }
+)
+
+RETURN {
+  term: {
+    term_id: term.term_id,
+    name: term.name,
+    definition: term.definition,
+    aliases: term.aliases,
+    status: term.status,
+    category: term.category
+  },
+  usage: {
+    methodologies: methodologies_using,
+    stages: stages_using,
+    indicators: indicators_using
+  },
+  related_terms: related_terms,
+  total_usage: LENGTH(methodologies_using) + LENGTH(stages_using) + LENGTH(indicators_using)
+}

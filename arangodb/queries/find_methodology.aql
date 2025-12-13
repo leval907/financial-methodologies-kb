@@ -1,0 +1,40 @@
+// Найти методологию по ID со всеми связями
+//
+// Parameters:
+//   @methodology_id - ID методологии (например: "accounting-basics")
+//
+// Returns:
+//   Полная структура методологии с этапами, инструментами, показателями
+
+FOR methodology IN methodologies
+  FILTER methodology.methodology_id == @methodology_id
+  
+  LET stages = (
+    FOR stage IN OUTBOUND methodology methodology_has_stage
+      SORT stage.order ASC
+      
+      LET tools = (
+        FOR tool IN OUTBOUND stage stage_uses_tool
+          RETURN tool
+      )
+      
+      LET indicators = (
+        FOR indicator IN OUTBOUND stage stage_uses_indicator
+          RETURN indicator
+      )
+      
+      LET rules = (
+        FOR rule IN OUTBOUND stage stage_has_rule
+          RETURN rule
+      )
+      
+      RETURN MERGE(stage, {
+        tools: tools,
+        indicators: indicators,
+        rules: rules
+      })
+  )
+  
+  RETURN MERGE(methodology, {
+    stages: stages
+  })

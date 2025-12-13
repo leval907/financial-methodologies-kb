@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Indicator Document",
+  "description": "Схема для коллекции indicators в ArangoDB",
+  "type": "object",
+  "required": ["_key", "indicator_id", "name"],
+  "properties": {
+    "_key": {
+      "type": "string",
+      "description": "Уникальный ключ (например: ind_001)",
+      "pattern": "^ind_\\d{3}$"
+    },
+    "indicator_id": {
+      "type": "string",
+      "description": "ID показателя из compiled YAML",
+      "pattern": "^ind_\\d{3}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Название показателя"
+    },
+    "description": {
+      "type": "string",
+      "description": "Описание показателя"
+    },
+    "formula": {
+      "type": "string",
+      "description": "Формула расчета показателя"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Единица измерения (%, руб., шт.)",
+      "examples": ["%", "руб.", "шт.", "дн."]
+    },
+    "threshold": {
+      "type": "object",
+      "description": "Пороговые значения для интерпретации",
+      "properties": {
+        "critical_low": {
+          "type": "number"
+        },
+        "warning_low": {
+          "type": "number"
+        },
+        "normal_min": {
+          "type": "number"
+        },
+        "normal_max": {
+          "type": "number"
+        },
+        "warning_high": {
+          "type": "number"
+        },
+        "critical_high": {
+          "type": "number"
+        }
+      }
+    },
+    "calculation_complexity": {
+      "type": "string",
+      "enum": ["simple", "medium", "complex"],
+      "description": "Сложность расчета"
+    },
+    "data_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Источники данных для расчета"
+    },
+    "content_text": {
+      "type": "string",
+      "description": "Нормализованный текст (name + description + formula)"
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "SHA256 хэш content_text"
+    },
+    "embedding_ref": {
+      "type": ["string", "null"],
+      "description": "Ссылка на embeddings/<id> или null"
+    },
+    "embedding_model": {
+      "type": ["string", "null"]
+    },
+    "embedding_dim": {
+      "type": ["integer", "null"]
+    }
+  }
+}

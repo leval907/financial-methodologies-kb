@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stage Document",
+  "description": "Схема для коллекции stages в ArangoDB",
+  "type": "object",
+  "required": ["_key", "stage_id", "title", "order"],
+  "properties": {
+    "_key": {
+      "type": "string",
+      "description": "Уникальный ключ (например: stage_001)",
+      "pattern": "^stage_\\d{3}$"
+    },
+    "stage_id": {
+      "type": "string",
+      "description": "ID этапа из compiled YAML",
+      "pattern": "^stage_\\d{3}$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Название этапа"
+    },
+    "description": {
+      "type": "string",
+      "description": "Описание этапа"
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Порядковый номер этапа"
+    },
+    "order_display": {
+      "type": "string",
+      "description": "Отображаемый номер (например: 1.2.3)"
+    },
+    "source": {
+      "type": ["object", "null"],
+      "properties": {
+        "chapter": {
+          "type": "string"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "block_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "substages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "deprecated"],
+      "description": "Статус этапа"
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "repo": {"type": "string"},
+        "ref": {"type": "string"},
+        "path": {"type": "string"}
+      }
+    },
+    "content_text": {
+      "type": "string",
+      "description": "Нормализованный текст для поиска/эмбеддинга"
+    },
+    "content_hash": {
+      "type": "string",
+      "description": "SHA256 хэш content_text"
+    },
+    "embedding_ref": {
+      "type": ["string", "null"],
+      "description": "Ссылка на embeddings/<id> или null"
+    },
+    "embedding_model": {
+      "type": ["string", "null"]
+    },
+    "embedding_dim": {
+      "type": ["integer", "null"]
+    }
+  }
+}

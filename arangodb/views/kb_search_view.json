@@ -1,0 +1,130 @@
+{
+  "name": "kb_search_view",
+  "type": "arangosearch",
+  "links": {
+    "methodologies": {
+      "analyzers": ["text_ru", "identity"],
+      "fields": {
+        "title": {
+          "analyzers": ["text_ru"]
+        },
+        "methodology_type": {
+          "analyzers": ["identity"]
+        },
+        "status": {
+          "analyzers": ["identity"]
+        },
+        "tags": {
+          "analyzers": ["identity"]
+        },
+        "content_text": {
+          "analyzers": ["text_ru"]
+        }
+      },
+      "includeAllFields": false,
+      "trackListPositions": false,
+      "storeValues": "none"
+    },
+    "stages": {
+      "analyzers": ["text_ru", "identity"],
+      "fields": {
+        "title": {
+          "analyzers": ["text_ru"]
+        },
+        "description": {
+          "analyzers": ["text_ru"]
+        },
+        "status": {
+          "analyzers": ["identity"]
+        },
+        "content_text": {
+          "analyzers": ["text_ru"]
+        }
+      }
+    },
+    "indicators": {
+      "analyzers": ["text_ru", "identity"],
+      "fields": {
+        "name": {
+          "analyzers": ["text_ru"]
+        },
+        "description": {
+          "analyzers": ["text_ru"]
+        },
+        "formula": {
+          "analyzers": ["text_ru"]
+        },
+        "content_text": {
+          "analyzers": ["text_ru"]
+        }
+      }
+    },
+    "tools": {
+      "analyzers": ["text_ru", "identity"],
+      "fields": {
+        "title": {
+          "analyzers": ["text_ru"]
+        },
+        "description": {
+          "analyzers": ["text_ru"]
+        },
+        "type": {
+          "analyzers": ["identity"]
+        },
+        "content_text": {
+          "analyzers": ["text_ru"]
+        }
+      }
+    },
+    "glossary_terms": {
+      "analyzers": ["text_ru", "identity"],
+      "fields": {
+        "name": {
+          "analyzers": ["text_ru", "identity"]
+        },
+        "definition": {
+          "analyzers": ["text_ru"]
+        },
+        "aliases": {
+          "analyzers": ["text_ru", "identity"]
+        },
+        "status": {
+          "analyzers": ["identity"]
+        },
+        "category": {
+          "analyzers": ["identity"]
+        },
+        "tags": {
+          "analyzers": ["identity"]
+        },
+        "content_text": {
+          "analyzers": ["text_ru"]
+        }
+      }
+    },
+    "chunks": {
+      "analyzers": ["text_ru"],
+      "fields": {
+        "text": {
+          "analyzers": ["text_ru"]
+        },
+        "source_type": {
+          "analyzers": ["identity"]
+        }
+      }
+    }
+  },
+  "primarySort": [
+    {
+      "field": "_key",
+      "direction": "asc"
+    }
+  ],
+  "storedValues": [],
+  "consolidationIntervalMsec": 1000,
+  "cleanupIntervalStep": 2,
+  "commitIntervalMsec": 1000,
+  "writebufferIdle": 64,
+  "writebufferActive": 0,
+  "writebufferSizeMax": 33554432
+}

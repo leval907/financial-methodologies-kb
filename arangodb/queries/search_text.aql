@@ -1,0 +1,75 @@
+// Полнотекстовый поиск через ArangoSearch view с фильтрами
+//
+// Parameters:
+//   @search_query - поисковый запрос (на русском)
+//   @limit - максимум результатов (по умолчанию 20)
+//   @filter_status - фильтр по статусу (optional: "published", "qa_approved", etc)
+//   @filter_type - фильтр по типу документа (optional: "methodology", "stage", "indicator", "glossary_term")
+//
+// Returns:
+//   Ранжированные результаты поиска из всех коллекций
+
+FOR doc IN kb_search_view
+  SEARCH ANALYZER(
+    PHRASE(doc.title, @search_query, "text_ru") OR
+    PHRASE(doc.name, @search_query, "text_ru") OR
+    PHRASE(doc.description, @search_query, "text_ru") OR
+    PHRASE(doc.definition, @search_query, "text_ru") OR
+    PHRASE(doc.content_text, @search_query, "text_ru"),
+    "text_ru"
+  )
+  
+  // Определяем тип документа
+  LET doc_type = SPLIT(doc._id, '/')[0]
+  
+  // Фильтр по статусу (если указан)
+  FILTER @filter_status == null OR doc.status == @filter_status
+  
+  // Фильтр по типу (если указан)
+  FILTER @filter_type == null OR doc_type == @filter_type
+  
+  // Вычисляем релевантность
+  LET score = BM25(doc)
+  
+  // Формируем результат
+  LET result = MERGE(
+    {
+      doc_type: doc_type,
+      score: score,
+      _id: doc._id,
+      _key: doc._key,
+      status: doc.status
+    },
+    doc_type == "methodologies" ? {
+      methodology_id: doc.methodology_id,
+      title: doc.title,
+      methodology_type: doc.methodology_type
+    } :
+    doc_type == "stages" ? {
+      stage_id: doc.stage_id,
+      title: doc.title,
+      order: doc.order
+    } :
+    doc_type == "indicators" ? {
+      indicator_id: doc.indicator_id,
+      name: doc.name,
+      formula: doc.formula
+    } :
+    doc_type == "tools" ? {
+      tool_id: doc.tool_id,
+      title: doc.title,
+      type: doc.type
+    } :
+    doc_type == "glossary_terms" ? {
+      term_id: doc.term_id,
+      name: doc.name,
+      definition: doc.definition,
+      category: doc.category
+    } :
+    {}
+  )
+  
+  SORT score DESC
+  LIMIT @limit || 20
+  
+  RETURN result
