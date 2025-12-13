@@ -1,0 +1,608 @@
+{
+  "sheet": "relationships",
+  "dimensions": "A1:D129",
+  "rows": 129,
+  "columns": 4,
+  "data": [
+    {
+      "from_term": "gross_margin",
+      "relationship": "depends_on",
+      "to_term": "revenue",
+      "comment": "GM = Revenue – COGS"
+    },
+    {
+      "from_term": "gross_margin",
+      "relationship": "depends_on",
+      "to_term": "cogs",
+      "comment": "GM formula"
+    },
+    {
+      "from_term": "gross_margin_percent",
+      "relationship": "depends_on",
+      "to_term": "gross_margin",
+      "comment": "GM% formula"
+    },
+    {
+      "from_term": "gross_margin_percent",
+      "relationship": "depends_on",
+      "to_term": "revenue",
+      "comment": "GM% formula"
+    },
+    {
+      "from_term": "operating_profit",
+      "relationship": "depends_on",
+      "to_term": "gross_margin",
+      "comment": "OP = GM – OPEX"
+    },
+    {
+      "from_term": "operating_profit",
+      "relationship": "depends_on",
+      "to_term": "operating_expenses",
+      "comment": "OP formula"
+    },
+    {
+      "from_term": "free_cash_flow",
+      "relationship": "depends_on",
+      "to_term": "operating_profit",
+      "comment": "FCF = OP – CAPEX ± ΔWC"
+    },
+    {
+      "from_term": "free_cash_flow",
+      "relationship": "depends_on",
+      "to_term": "capex",
+      "comment": "FCF formula"
+    },
+    {
+      "from_term": "free_cash_flow",
+      "relationship": "depends_on",
+      "to_term": "Δwc",
+      "comment": "FCF formula"
+    },
+    {
+      "from_term": "working_capital",
+      "relationship": "depends_on",
+      "to_term": "ar_days",
+      "comment": "WC driver"
+    },
+    {
+      "from_term": "working_capital",
+      "relationship": "depends_on",
+      "to_term": "inventory_days",
+      "comment": "WC driver"
+    },
+    {
+      "from_term": "working_capital",
+      "relationship": "depends_on",
+      "to_term": "ap_days",
+      "comment": "WC driver"
+    },
+    {
+      "from_term": "ccc",
+      "relationship": "depends_on",
+      "to_term": "ar_days",
+      "comment": "CCC formula"
+    },
+    {
+      "from_term": "ccc",
+      "relationship": "depends_on",
+      "to_term": "inventory_days",
+      "comment": "CCC formula"
+    },
+    {
+      "from_term": "ccc",
+      "relationship": "depends_on",
+      "to_term": "ap_days",
+      "comment": "CCC formula"
+    },
+    {
+      "from_term": "ar_days",
+      "relationship": "impacts",
+      "to_term": "ccc",
+      "comment": "AR ↑ → CCC ↑"
+    },
+    {
+      "from_term": "inventory_days",
+      "relationship": "impacts",
+      "to_term": "ccc",
+      "comment": "INV ↑ → CCC ↑"
+    },
+    {
+      "from_term": "ap_days",
+      "relationship": "impacts",
+      "to_term": "ccc",
+      "comment": "AP ↑ → CCC ↓"
+    },
+    {
+      "from_term": "ccc",
+      "relationship": "impacts",
+      "to_term": "free_cash_flow",
+      "comment": "CCC ↑ → FCF ↓"
+    },
+    {
+      "from_term": "price",
+      "relationship": "drives",
+      "to_term": "revenue",
+      "comment": "Price ↑ → Revenue ↑"
+    },
+    {
+      "from_term": "volume",
+      "relationship": "drives",
+      "to_term": "revenue",
+      "comment": "Volume ↑ → Revenue ↑"
+    },
+    {
+      "from_term": "cost_reduction",
+      "relationship": "drives",
+      "to_term": "gross_margin",
+      "comment": "COGS ↓ → GM ↑"
+    },
+    {
+      "from_term": "ar_management",
+      "relationship": "improves",
+      "to_term": "ar_days",
+      "comment": "reduces AR days"
+    },
+    {
+      "from_term": "inventory_reduction",
+      "relationship": "improves",
+      "to_term": "inventory_days",
+      "comment": "reduces INV days"
+    },
+    {
+      "from_term": "ap_extension",
+      "relationship": "improves",
+      "to_term": "ap_days",
+      "comment": "increases AP days"
+    },
+    {
+      "from_term": "working_capital",
+      "relationship": "impacts",
+      "to_term": "days_to_death",
+      "comment": "WC drives survival"
+    },
+    {
+      "from_term": "operating_outflow_per_day",
+      "relationship": "depends_on",
+      "to_term": "operating_expenses",
+      "comment": "Daily OPEX"
+    },
+    {
+      "from_term": "days_to_death",
+      "relationship": "depends_on",
+      "to_term": "working_capital",
+      "comment": "Days until cash out"
+    },
+    {
+      "from_term": "revenue",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 1"
+    },
+    {
+      "from_term": "gross_margin",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 1"
+    },
+    {
+      "from_term": "operating_profit",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 1"
+    },
+    {
+      "from_term": "working_capital",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 2"
+    },
+    {
+      "from_term": "ar_days",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 2"
+    },
+    {
+      "from_term": "inventory_days",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 2"
+    },
+    {
+      "from_term": "ap_days",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 2"
+    },
+    {
+      "from_term": "ccc",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 2"
+    },
+    {
+      "from_term": "capex",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 3"
+    },
+    {
+      "from_term": "investment",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 3"
+    },
+    {
+      "from_term": "debt_equity",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 4"
+    },
+    {
+      "from_term": "net_debt",
+      "relationship": "part_of",
+      "to_term": "cashflowstory",
+      "comment": "CFS Chapter 4"
+    },
+    {
+      "from_term": "gross_margin",
+      "relationship": "impacts",
+      "to_term": "operating_profit",
+      "comment": "GM → OP"
+    },
+    {
+      "from_term": "operating_profit",
+      "relationship": "impacts",
+      "to_term": "free_cash_flow",
+      "comment": "OP → FCF"
+    },
+    {
+      "from_term": "Δwc",
+      "relationship": "impacts",
+      "to_term": "free_cash_flow",
+      "comment": "ΔWC ↑ → FCF ↓"
+    },
+    {
+      "from_term": "inventory_days",
+      "relationship": "impacts",
+      "to_term": "working_capital",
+      "comment": "INV ↑ → tied capital ↑"
+    },
+    {
+      "from_term": "ar_days",
+      "relationship": "impacts",
+      "to_term": "working_capital",
+      "comment": "AR ↑ → WC ↑"
+    },
+    {
+      "from_term": "ap_days",
+      "relationship": "impacts",
+      "to_term": "working_capital",
+      "comment": "AP ↑ → WC ↓"
+    },
+    {
+      "from_term": "price",
+      "relationship": "impacts",
+      "to_term": "gross_margin",
+      "comment": "Price ↑ → GM ↑"
+    },
+    {
+      "from_term": "volume",
+      "relationship": "impacts",
+      "to_term": "gross_margin",
+      "comment": "Revenue driver"
+    },
+    {
+      "from_term": "operating_expenses",
+      "relationship": "impacts",
+      "to_term": "operating_profit",
+      "comment": "OPEX ↑ → OP ↓"
+    },
+    {
+      "from_term": "cogs",
+      "relationship": "impacts",
+      "to_term": "gross_margin",
+      "comment": "COGS ↑ → GM ↓"
+    },
+    {
+      "from_term": "ebitda",
+      "relationship": "depends_on",
+      "to_term": "operating_profit",
+      "comment": "EBITDA ≈ OP + D&A (упрощённо)"
+    },
+    {
+      "from_term": "ebit",
+      "relationship": "depends_on",
+      "to_term": "operating_profit",
+      "comment": "EBIT близок к OP до процентов и налогов"
+    },
+    {
+      "from_term": "ebitda_margin",
+      "relationship": "depends_on",
+      "to_term": "ebitda",
+      "comment": "EBITDA% = EBITDA / Revenue"
+    },
+    {
+      "from_term": "ebitda_margin",
+      "relationship": "depends_on",
+      "to_term": "revenue",
+      "comment": "EBITDA% formula"
+    },
+    {
+      "from_term": "operating_margin",
+      "relationship": "depends_on",
+      "to_term": "operating_profit",
+      "comment": "OP% = OP / Revenue"
+    },
+    {
+      "from_term": "operating_margin",
+      "relationship": "depends_on",
+      "to_term": "revenue",
+      "comment": "OP% formula"
+    },
+    {
+      "from_term": "net_margin",
+      "relationship": "depends_on",
+      "to_term": "net_profit",
+      "comment": "Net% = NP / Revenue"
+    },
+    {
+      "from_term": "net_margin",
+      "relationship": "depends_on",
+      "to_term": "revenue",
+      "comment": "Net% formula"
+    },
+    {
+      "from_term": "gross_margin",
+      "relationship": "impacts",
+      "to_term": "ebitda",
+      "comment": "GM рост тянет вверх EBITDA"
+    },
+    {
+      "from_term": "ebitda",
+      "relationship": "impacts",
+      "to_term": "net_profit",
+      "comment": "EBITDA рост повышает Net Profit"
+    },
+    {
+      "from_term": "net_working_capital",
+      "relationship": "depends_on",
+      "to_term": "working_capital",
+      "comment": "NWC ~ WC (упрощение)"
+    },
+    {
+      "from_term": "inventory_turnover",
+      "relationship": "depends_on",
+      "to_term": "cogs",
+      "comment": "InvTO = COGS / Avg Inventory"
+    },
+    {
+      "from_term": "inventory_turnover",
+      "relationship": "depends_on",
+      "to_term": "inventory_days",
+      "comment": "InvTO ↔ InvDays"
+    },
+    {
+      "from_term": "receivables_turnover",
+      "relationship": "depends_on",
+      "to_term": "revenue",
+      "comment": "AR TO = Revenue / Avg AR"
+    },
+    {
+      "from_term": "receivables_turnover",
+      "relationship": "depends_on",
+      "to_term": "ar_days",
+      "comment": "AR TO ↔ AR Days"
+    },
+    {
+      "from_term": "payables_turnover",
+      "relationship": "depends_on",
+      "to_term": "cogs",
+      "comment": "AP TO = COGS / Avg AP"
+    },
+    {
+      "from_term": "payables_turnover",
+      "relationship": "depends_on",
+      "to_term": "ap_days",
+      "comment": "AP TO ↔ AP Days"
+    },
+    {
+      "from_term": "dso",
+      "relationship": "depends_on",
+      "to_term": "ar_days",
+      "comment": "DSO ~ AR Days"
+    },
+    {
+      "from_term": "dio",
+      "relationship": "depends_on",
+      "to_term": "inventory_days",
+      "comment": "DIO ~ Inv Days"
+    },
+    {
+      "from_term": "dpo",
+      "relationship": "depends_on",
+      "to_term": "ap_days",
+      "comment": "DPO ~ AP Days"
+    },
+    {
+      "from_term": "dso",
+      "relationship": "impacts",
+      "to_term": "ccc",
+      "comment": "DSO ↑ → CCC ↑"
+    },
+    {
+      "from_term": "dio",
+      "relationship": "impacts",
+      "to_term": "ccc",
+      "comment": "DIO ↑ → CCC ↑"
+    },
+    {
+      "from_term": "dpo",
+      "relationship": "impacts",
+      "to_term": "ccc",
+      "comment": "DPO ↑ → CCC ↓"
+    },
+    {
+      "from_term": "cash_burn_rate",
+      "relationship": "depends_on",
+      "to_term": "operating_outflow_per_day",
+      "comment": "Burn ≈ daily OPEX"
+    },
+    {
+      "from_term": "runway",
+      "relationship": "depends_on",
+      "to_term": "working_capital",
+      "comment": "Runway = WC / Burn"
+    },
+    {
+      "from_term": "runway",
+      "relationship": "depends_on",
+      "to_term": "cash_burn_rate",
+      "comment": "Runway formula"
+    },
+    {
+      "from_term": "runway",
+      "relationship": "impacts",
+      "to_term": "days_to_death",
+      "comment": "Runway ~ Days to death"
+    },
+    {
+      "from_term": "cash_flow",
+      "relationship": "depends_on",
+      "to_term": "free_cash_flow",
+      "comment": "CF ≈ FCF (упрощённо)"
+    },
+    {
+      "from_term": "cash_flow",
+      "relationship": "impacts",
+      "to_term": "net_debt",
+      "comment": "CF < 0 → Net Debt ↑"
+    },
+    {
+      "from_term": "net_debt",
+      "relationship": "impacts",
+      "to_term": "debt_equity",
+      "comment": "Net Debt growth → D/E ↑"
+    },
+    {
+      "from_term": "roic",
+      "relationship": "depends_on",
+      "to_term": "ebit",
+      "comment": "ROIC = NOPAT / IC (приближённо)"
+    },
+    {
+      "from_term": "roic",
+      "relationship": "depends_on",
+      "to_term": "ic",
+      "comment": "ROIC formula"
+    },
+    {
+      "from_term": "wacc",
+      "relationship": "depends_on",
+      "to_term": "cost_of_debt",
+      "comment": "WACC = kd * (D/V) + ke * (E/V)"
+    },
+    {
+      "from_term": "wacc",
+      "relationship": "depends_on",
+      "to_term": "cost_of_equity",
+      "comment": "WACC components"
+    },
+    {
+      "from_term": "wacc",
+      "relationship": "depends_on",
+      "to_term": "debt_equity",
+      "comment": "Capital structure affects WACC"
+    },
+    {
+      "from_term": "eva",
+      "relationship": "depends_on",
+      "to_term": "roic",
+      "comment": "EVA = (ROIC – WACC) * IC"
+    },
+    {
+      "from_term": "eva",
+      "relationship": "depends_on",
+      "to_term": "wacc",
+      "comment": "EVA formula"
+    },
+    {
+      "from_term": "eva",
+      "relationship": "depends_on",
+      "to_term": "ic",
+      "comment": "EVA formula"
+    },
+    {
+      "from_term": "roic",
+      "relationship": "impacts",
+      "to_term": "eva",
+      "comment": "ROIC ↑ → EVA ↑"
+    },
+    {
+      "from_term": "wacc",
+      "relationship": "impacts",
+      "to_term": "eva",
+      "comment": "WACC ↑ → EVA ↓"
+    },
+    {
+      "from_term": "roic",
+      "relationship": "impacts",
+      "to_term": "business_value",
+      "comment": "ROIC выше WACC → рост стоимости"
+    },
+    {
+      "from_term": "throughput",
+      "relationship": "depends_on",
+      "to_term": "revenue",
+      "comment": "T = Revenue – PVC"
+    },
+    {
+      "from_term": "throughput",
+      "relationship": "depends_on",
+      "to_term": "pvc",
+      "comment": "Throughput formula"
+    },
+    {
+      "from_term": "throughput",
+      "relationship": "impacts",
+      "to_term": "operating_profit",
+      "comment": "T ↑ → OP ↑ при неизменном OE"
+    },
+    {
+      "from_term": "operating_expense_oe",
+      "relationship": "impacts",
+      "to_term": "operating_profit",
+      "comment": "OE ↑ → OP ↓"
+    },
+    {
+      "from_term": "investment_i",
+      "relationship": "impacts",
+      "to_term": "throughput",
+      "comment": "I в TOC связывает T и OE"
+    },
+    {
+      "from_term": "cash_velocity",
+      "relationship": "depends_on",
+      "to_term": "throughput",
+      "comment": "CV базируется на T/PVC"
+    },
+    {
+      "from_term": "cash_velocity",
+      "relationship": "depends_on",
+      "to_term": "ccc",
+      "comment": "N = CCC в формуле CV"
+    },
+    {
+      "from_term": "cash_velocity",
+      "relationship": "impacts",
+      "to_term": "sustainable_growth_rate",
+      "comment": "CV ↑ → SGR ↑"
+    },
+    {
+      "from_term": "sustainable_growth_rate",
+      "relationship": "depends_on",
+      "to_term": "roic",
+      "comment": "SGR опирается на рентабельность"
+    }
+  ]
+}

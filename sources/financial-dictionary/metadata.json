@@ -1,0 +1,12 @@
+{
+  "book_id": "financial-dictionary",
+  "source_file": "cache/excel/financial_dictionary_CFS_TOC_Volnin_relationships.xlsx",
+  "format": ".xlsx",
+  "sheets": [
+    "dictionary_template",
+    "relationships"
+  ],
+  "sheet_count": 2,
+  "total_formulas": 0,
+  "extracted_at": "2025-12-13T08:07:47.850065"
+}

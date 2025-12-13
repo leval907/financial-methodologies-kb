@@ -11,3 +11,7 @@ cache/
 .vscode/
 .idea/
 *.swp
+
+# Python virtual environment
+venv/
+.venv/
