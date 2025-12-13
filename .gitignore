@@ -1,51 +1,13 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
+# Environment
+.env
 venv/
-ENV/
-env/
-.venv
+__pycache__/
+*.pyc
 
-# Node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-dist/
-build/
+# Cache
+cache/
 
 # IDE
 .vscode/
 .idea/
 *.swp
-*.swo
-*~
-.DS_Store
-
-# Testing
-.coverage
-htmlcov/
-.pytest_cache/
-
-# Build
-*.egg-info/
-dist/
-build/
-
-# Local development
-.env
-.env.local
-*.local
-
-# Logs
-*.log
-logs/
-
-# Temporary
-tmp/
-temp/
-*.tmp
-.env
