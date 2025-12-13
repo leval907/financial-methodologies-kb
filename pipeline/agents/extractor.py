@@ -82,11 +82,39 @@ class DocumentExtractor:
             raise NotImplementedError("Native PDF extraction not implemented yet")
     
     def extract_docx(self, filepath: Path) -> Dict[str, Any]:
-        """Извлечь текст из DOCX"""
+        """
+        Извлечь текст из DOCX с fallback стратегией:
+        1. markitdown (быстро)
+        2. mammoth (только текст, надёжно)
+        """
+        # Стратегия 1: markitdown
         if self.use_markitdown:
-            return self._extract_via_markitdown(filepath)
-        else:
-            raise NotImplementedError("Native DOCX extraction not implemented yet")
+            try:
+                return self._extract_via_markitdown(filepath)
+            except Exception as e:
+                print(f"⚠️ markitdown failed for DOCX: {e}, trying fallback...")
+        
+        # Стратегия 2: mammoth (fallback)
+        try:
+            import mammoth
+            
+            with open(filepath, 'rb') as f:
+                result = mammoth.extract_raw_text(f)
+            
+            return {
+                'content': result.value,
+                'metadata': {
+                    'method': 'mammoth',
+                    'lines': len(result.value.splitlines()),
+                    'chars': len(result.value),
+                    'quality': 'basic',
+                    'note': 'Formatting lost, text only (fallback method)'
+                },
+                'tables': [],
+                'formulas': [],
+            }
+        except Exception as e:
+            raise RuntimeError(f"All DOCX extraction methods failed: {e}")
     
     def extract_pptx(self, filepath: Path) -> Dict[str, Any]:
         """Извлечь текст из PPTX"""
@@ -193,12 +221,17 @@ class DocumentExtractor:
             
             content = result.stdout
             
+            # Проверяем качество вывода
+            if len(content.strip()) < 50:
+                raise RuntimeError("markitdown output too short, possibly failed")
+            
             return {
                 'content': content,
                 'metadata': {
                     'method': 'markitdown',
                     'lines': len(content.splitlines()),
                     'chars': len(content),
+                    'quality': 'good',
                 },
                 'tables': [],
                 'formulas': [],
