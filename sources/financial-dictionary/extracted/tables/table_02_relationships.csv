@@ -1,0 +1,101 @@
+from_term,relationship,to_term,comment
+gross_margin,depends_on,revenue,GM = Revenue – COGS
+gross_margin,depends_on,cogs,GM formula
+gross_margin_percent,depends_on,gross_margin,GM% formula
+gross_margin_percent,depends_on,revenue,GM% formula
+operating_profit,depends_on,gross_margin,OP = GM – OPEX
+operating_profit,depends_on,operating_expenses,OP formula
+free_cash_flow,depends_on,operating_profit,FCF = OP – CAPEX ± ΔWC
+free_cash_flow,depends_on,capex,FCF formula
+free_cash_flow,depends_on,Δwc,FCF formula
+working_capital,depends_on,ar_days,WC driver
+working_capital,depends_on,inventory_days,WC driver
+working_capital,depends_on,ap_days,WC driver
+ccc,depends_on,ar_days,CCC formula
+ccc,depends_on,inventory_days,CCC formula
+ccc,depends_on,ap_days,CCC formula
+ar_days,impacts,ccc,AR ↑ → CCC ↑
+inventory_days,impacts,ccc,INV ↑ → CCC ↑
+ap_days,impacts,ccc,AP ↑ → CCC ↓
+ccc,impacts,free_cash_flow,CCC ↑ → FCF ↓
+price,drives,revenue,Price ↑ → Revenue ↑
+volume,drives,revenue,Volume ↑ → Revenue ↑
+cost_reduction,drives,gross_margin,COGS ↓ → GM ↑
+ar_management,improves,ar_days,reduces AR days
+inventory_reduction,improves,inventory_days,reduces INV days
+ap_extension,improves,ap_days,increases AP days
+working_capital,impacts,days_to_death,WC drives survival
+operating_outflow_per_day,depends_on,operating_expenses,Daily OPEX
+days_to_death,depends_on,working_capital,Days until cash out
+revenue,part_of,cashflowstory,CFS Chapter 1
+gross_margin,part_of,cashflowstory,CFS Chapter 1
+operating_profit,part_of,cashflowstory,CFS Chapter 1
+working_capital,part_of,cashflowstory,CFS Chapter 2
+ar_days,part_of,cashflowstory,CFS Chapter 2
+inventory_days,part_of,cashflowstory,CFS Chapter 2
+ap_days,part_of,cashflowstory,CFS Chapter 2
+ccc,part_of,cashflowstory,CFS Chapter 2
+capex,part_of,cashflowstory,CFS Chapter 3
+investment,part_of,cashflowstory,CFS Chapter 3
+debt_equity,part_of,cashflowstory,CFS Chapter 4
+net_debt,part_of,cashflowstory,CFS Chapter 4
+gross_margin,impacts,operating_profit,GM → OP
+operating_profit,impacts,free_cash_flow,OP → FCF
+Δwc,impacts,free_cash_flow,ΔWC ↑ → FCF ↓
+inventory_days,impacts,working_capital,INV ↑ → tied capital ↑
+ar_days,impacts,working_capital,AR ↑ → WC ↑
+ap_days,impacts,working_capital,AP ↑ → WC ↓
+price,impacts,gross_margin,Price ↑ → GM ↑
+volume,impacts,gross_margin,Revenue driver
+operating_expenses,impacts,operating_profit,OPEX ↑ → OP ↓
+cogs,impacts,gross_margin,COGS ↑ → GM ↓
+ebitda,depends_on,operating_profit,EBITDA ≈ OP + D&A (упрощённо)
+ebit,depends_on,operating_profit,EBIT близок к OP до процентов и налогов
+ebitda_margin,depends_on,ebitda,EBITDA% = EBITDA / Revenue
+ebitda_margin,depends_on,revenue,EBITDA% formula
+operating_margin,depends_on,operating_profit,OP% = OP / Revenue
+operating_margin,depends_on,revenue,OP% formula
+net_margin,depends_on,net_profit,Net% = NP / Revenue
+net_margin,depends_on,revenue,Net% formula
+gross_margin,impacts,ebitda,GM рост тянет вверх EBITDA
+ebitda,impacts,net_profit,EBITDA рост повышает Net Profit
+net_working_capital,depends_on,working_capital,NWC ~ WC (упрощение)
+inventory_turnover,depends_on,cogs,InvTO = COGS / Avg Inventory
+inventory_turnover,depends_on,inventory_days,InvTO ↔ InvDays
+receivables_turnover,depends_on,revenue,AR TO = Revenue / Avg AR
+receivables_turnover,depends_on,ar_days,AR TO ↔ AR Days
+payables_turnover,depends_on,cogs,AP TO = COGS / Avg AP
+payables_turnover,depends_on,ap_days,AP TO ↔ AP Days
+dso,depends_on,ar_days,DSO ~ AR Days
+dio,depends_on,inventory_days,DIO ~ Inv Days
+dpo,depends_on,ap_days,DPO ~ AP Days
+dso,impacts,ccc,DSO ↑ → CCC ↑
+dio,impacts,ccc,DIO ↑ → CCC ↑
+dpo,impacts,ccc,DPO ↑ → CCC ↓
+cash_burn_rate,depends_on,operating_outflow_per_day,Burn ≈ daily OPEX
+runway,depends_on,working_capital,Runway = WC / Burn
+runway,depends_on,cash_burn_rate,Runway formula
+runway,impacts,days_to_death,Runway ~ Days to death
+cash_flow,depends_on,free_cash_flow,CF ≈ FCF (упрощённо)
+cash_flow,impacts,net_debt,CF < 0 → Net Debt ↑
+net_debt,impacts,debt_equity,Net Debt growth → D/E ↑
+roic,depends_on,ebit,ROIC = NOPAT / IC (приближённо)
+roic,depends_on,ic,ROIC formula
+wacc,depends_on,cost_of_debt,WACC = kd * (D/V) + ke * (E/V)
+wacc,depends_on,cost_of_equity,WACC components
+wacc,depends_on,debt_equity,Capital structure affects WACC
+eva,depends_on,roic,EVA = (ROIC – WACC) * IC
+eva,depends_on,wacc,EVA formula
+eva,depends_on,ic,EVA formula
+roic,impacts,eva,ROIC ↑ → EVA ↑
+wacc,impacts,eva,WACC ↑ → EVA ↓
+roic,impacts,business_value,ROIC выше WACC → рост стоимости
+throughput,depends_on,revenue,T = Revenue – PVC
+throughput,depends_on,pvc,Throughput formula
+throughput,impacts,operating_profit,T ↑ → OP ↑ при неизменном OE
+operating_expense_oe,impacts,operating_profit,OE ↑ → OP ↓
+investment_i,impacts,throughput,I в TOC связывает T и OE
+cash_velocity,depends_on,throughput,CV базируется на T/PVC
+cash_velocity,depends_on,ccc,N = CCC в формуле CV
+cash_velocity,impacts,sustainable_growth_rate,CV ↑ → SGR ↑
+sustainable_growth_rate,depends_on,roic,SGR опирается на рентабельность

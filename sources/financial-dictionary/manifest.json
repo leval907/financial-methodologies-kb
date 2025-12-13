@@ -1,0 +1,39 @@
+{
+  "book_id": "financial-dictionary",
+  "extraction_date": "2025-12-13T09:15:35.294608",
+  "agent": "Agent A v2.0",
+  "source": {
+    "filename": "financial_dictionary_CFS_TOC_Volnin_relationships.xlsx",
+    "format": "XLSX",
+    "size_bytes": 19547,
+    "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/cache/excel/financial_dictionary_CFS_TOC_Volnin_relationships.xlsx"
+  },
+  "quality": {
+    "score": 59.89,
+    "text_density": 1.0,
+    "garbage_ratio": 0.002,
+    "repeated_lines_ratio": 0.0,
+    "table_extract_coverage": 0.009
+  },
+  "routing": {
+    "ok_for_outline": false,
+    "ok_with_warnings": false,
+    "needs_repair": true
+  },
+  "warnings": [
+    "⚠️ Poor table extraction (0.9%): complex tables lost"
+  ],
+  "statistics": {
+    "total_blocks": 7,
+    "blocks_by_type": {
+      "heading": 3,
+      "list": 2,
+      "table": 2
+    }
+  },
+  "output_files": {
+    "blocks": "financial-dictionary/extracted/blocks.jsonl",
+    "full_text": "financial-dictionary/extracted/full_text.md",
+    "raw_original": "financial-dictionary/raw/original.xlsx"
+  }
+}

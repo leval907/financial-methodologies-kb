@@ -1,0 +1,36 @@
+{
+  "book_id": "accounting-basics-pdf",
+  "extraction_date": "2025-12-13T09:14:40.058715",
+  "agent": "Agent A v2.0",
+  "source": {
+    "filename": "Бухгалтерия_13.pdf",
+    "format": "PDF",
+    "size_bytes": 204084,
+    "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/cache/books/Бухгалтерия_13.pdf"
+  },
+  "quality": {
+    "score": 92.12,
+    "text_density": 1.0,
+    "garbage_ratio": 0.002,
+    "repeated_lines_ratio": 0.074,
+    "table_extract_coverage": 1.0
+  },
+  "routing": {
+    "ok_for_outline": true,
+    "ok_with_warnings": false,
+    "needs_repair": false
+  },
+  "warnings": [],
+  "statistics": {
+    "total_blocks": 515,
+    "blocks_by_type": {
+      "paragraph": 514,
+      "list": 1
+    }
+  },
+  "output_files": {
+    "blocks": "accounting-basics-pdf/extracted/blocks.jsonl",
+    "full_text": "accounting-basics-pdf/extracted/full_text.md",
+    "raw_original": "accounting-basics-pdf/raw/original.pdf"
+  }
+}
