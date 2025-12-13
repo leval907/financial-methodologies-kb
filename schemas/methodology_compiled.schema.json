@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://financial-methodologies-kb.local/schemas/methodology_compiled.schema.json",
+  "title": "Compiled Methodology",
+  "description": "Normalized methodology structure produced by Agent C (compiler)",
+  "type": "object",
+  "required": ["metadata", "classification", "structure"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["id", "title", "created_at", "source"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique methodology identifier (book_id)",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "title": {
+          "type": "string",
+          "description": "Methodology title",
+          "minLength": 1
+        },
+        "created_at": {
+          "type": "string",
+          "description": "ISO 8601 timestamp when compiled",
+          "format": "date-time"
+        },
+        "source": {
+          "type": "object",
+          "required": ["work_outline"],
+          "properties": {
+            "work_outline": {
+              "type": "string",
+              "description": "Path to outline.yaml (Agent B output)"
+            },
+            "sources_metadata": {
+              "type": ["string", "null"],
+              "description": "Optional path to sources metadata"
+            }
+          }
+        },
+        "agent_b_metadata": {
+          "type": "object",
+          "description": "Metadata from Agent B (outline builder)",
+          "properties": {
+            "agent": {
+              "type": "string"
+            },
+            "model_used": {
+              "type": "string"
+            },
+            "chapters_processed": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "required": ["methodology_type"],
+      "properties": {
+        "methodology_type": {
+          "type": "string",
+          "description": "Methodology type classification",
+          "enum": [
+            "diagnostic",
+            "analysis",
+            "optimization",
+            "transformation",
+            "planning",
+            "execution",
+            "monitoring",
+            "mixed"
+          ]
+        }
+      }
+    },
+    "structure": {
+      "type": "object",
+      "required": ["stages"],
+      "properties": {
+        "stages": {
+          "type": "array",
+          "description": "Ordered list of methodology stages",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "description", "order"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique stage identifier",
+                "pattern": "^stage_\\d{3}$"
+              },
+              "title": {
+                "type": "string",
+                "description": "Stage title",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "description": "Stage description",
+                "minLength": 1
+              },
+              "order": {
+                "type": "integer",
+                "description": "Stage order (1-based)",
+                "minimum": 1
+              },
+              "order_display": {
+                "type": "string",
+                "description": "Display string showing order mapping"
+              },
+              "source": {
+                "type": ["string", "null"],
+                "description": "Optional source reference"
+              }
+            }
+          }
+        },
+        "tools": {
+          "type": "array",
+          "description": "Tools used in methodology",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "type", "description"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique tool identifier",
+                "pattern": "^tool_\\d{3}$"
+              },
+              "title": {
+                "type": "string",
+                "description": "Tool title",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "description": "Tool type (normalized)",
+                "enum": ["chart", "table", "software", "framework", "template", "other"]
+              },
+              "description": {
+                "type": "string",
+                "description": "Tool description",
+                "minLength": 1
+              },
+              "source": {
+                "type": ["string", "null"]
+              }
+            }
+          }
+        },
+        "indicators": {
+          "type": "array",
+          "description": "Key performance indicators or metrics",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "description"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique indicator identifier",
+                "pattern": "^ind_\\d{3}$"
+              },
+              "name": {
+                "type": "string",
+                "description": "Indicator name",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "description": "Indicator description",
+                "minLength": 1
+              },
+              "formula": {
+                "type": "string",
+                "description": "Optional calculation formula"
+              },
+              "source": {
+                "type": ["string", "null"]
+              }
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "description": "Decision rules or business logic",
+          "items": {
+            "type": "object",
+            "required": ["id", "condition", "action"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique rule identifier",
+                "pattern": "^rule_\\d{3}$"
+              },
+              "condition": {
+                "type": "string",
+                "description": "Rule condition (when to apply)",
+                "minLength": 1
+              },
+              "action": {
+                "type": "string",
+                "description": "Rule action (what to do)",
+                "minLength": 1
+              },
+              "severity": {
+                "type": "string",
+                "description": "Rule severity/priority",
+                "enum": ["critical", "warning", "info", "low"]
+              },
+              "source": {
+                "type": ["string", "null"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "glossary_references": {
+      "type": "object",
+      "description": "Optional glossary term references",
+      "properties": {
+        "found_terms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["term_id"],
+            "properties": {
+              "term_id": {
+                "type": "string",
+                "description": "Glossary term identifier"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Number of occurrences",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

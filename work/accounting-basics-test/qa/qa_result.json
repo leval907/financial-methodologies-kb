@@ -1,0 +1,221 @@
+{
+  "book_id": "accounting-basics-test",
+  "approved": false,
+  "score": 0,
+  "summary": {
+    "blockers": 18,
+    "majors": 0,
+    "minors": 0
+  },
+  "issues": [
+    {
+      "id": "SCHEMA-001",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/indicators/9/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-002",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/indicators/10/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-003",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/indicators/11/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-004",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/indicators/12/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-005",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/indicators/13/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-006",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/indicators/14/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-007",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/indicators/15/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-008",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/indicators/16/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-009",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'high' is not one of ['critical', 'warning', 'info', 'low']",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/rules/0/severity"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-010",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'high' is not one of ['critical', 'warning', 'info', 'low']",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/rules/1/severity"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-011",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'high' is not one of ['critical', 'warning', 'info', 'low']",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/rules/2/severity"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-012",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'high' is not one of ['critical', 'warning', 'info', 'low']",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/rules/3/severity"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-013",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'medium' is not one of ['critical', 'warning', 'info', 'low']",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/rules/4/severity"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-014",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'medium' is not one of ['critical', 'warning', 'info', 'low']",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/rules/5/severity"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-015",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/stages/17/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-016",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/stages/18/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-017",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/stages/19/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    },
+    {
+      "id": "SCHEMA-018",
+      "severity": "BLOCKER",
+      "category": "schema",
+      "message": "'' should be non-empty",
+      "evidence": {
+        "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/data/methodologies/accounting-basics-test.yaml",
+        "pointer": "/structure/stages/20/description"
+      },
+      "fix_hint": "Fix Agent C output or schema mismatch."
+    }
+  ],
+  "metrics": {
+    "schema_valid": false,
+    "glossary_coverage": 1.0,
+    "formula_checks_passed": 1.0
+  },
+  "generated_at": "2025-12-13T11:58:58.719494+00:00",
+  "reviewer": {
+    "agent": "Agent D",
+    "model": "none (precheck-only)",
+    "prompt_version": "v1.0"
+  }
+}
