@@ -21,14 +21,27 @@ client = openai.OpenAI(
 
 print("🔍 Testing Requesty AI connection...\n")
 
-# Попробуем разные модели
+# Попробуем доступные модели из вашего Requesty dashboard
 test_models = [
-    "openai/gpt-4o-mini",
+    # DeepSeek (очень дешево!)
+    "deepseek/deepseek-chat",
+    
+    # OpenAI
     "openai/gpt-4o",
-    "anthropic/claude-3-5-sonnet-20241022",
-    "anthropic/claude-3-5-haiku-20241022",
-    "google/gemini-1.5-flash",
-    "gpt-4o-mini",  # без префикса
+    "openai/gpt-5-mini",  # или gpt-4o-mini?
+    
+    # Google Gemini
+    "google/gemini-2.5-flash",
+    "google/gemini-2.5-pro",
+    
+    # Coding специализированные
+    "coding/gemini-2.5-pro",
+    
+    # XAI
+    "xai/grok-code-fast-1",
+    
+    # Smart task
+    "smart/task",
 ]
 
 messages = [{"role": "user", "content": "Hi"}]

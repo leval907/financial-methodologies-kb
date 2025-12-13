@@ -22,10 +22,46 @@ class ModelInfo:
 
 
 # ============================================
-# Доступные модели через Requesty AI
+# Доступные модели через Requesty AI (РЕАЛЬНЫЕ из dashboard)
 # ============================================
 
 AVAILABLE_MODELS = {
+    # Alibaba Qwen3-Max - ПРАВИЛЬНО определяет методологию! Отличный русский
+    "alibaba/qwen3-max": ModelInfo(
+        id="alibaba/qwen3-max",
+        provider="Alibaba",
+        name="Qwen3-Max",
+        context_window=32_000,
+        cost_per_1m_input=0.0,  # уточняется
+        cost_per_1m_output=0.0,
+        description="Мощная модель от Alibaba, правильно определяет diagnostic",
+        best_for=["russian", "methodology_classification", "structured_extraction"]
+    ),
+    
+    # DeepSeek - ОЧЕНЬ ДЕШЕВО! Отличное соотношение цена/качество
+    "deepseek/deepseek-chat": ModelInfo(
+        id="deepseek/deepseek-chat",
+        provider="DeepSeek",
+        name="DeepSeek Chat",
+        context_window=64_000,
+        cost_per_1m_input=0.14,  # $0.14 per 1M tokens!
+        cost_per_1m_output=0.28,
+        description="Очень дешевая и качественная китайская модель",
+        best_for=["cost_effective", "reasoning", "coding", "multilingual"]
+    ),
+    
+    # Smart/Task - умная маршрутизация
+    "smart/task": ModelInfo(
+        id="smart/task",
+        provider="Smart",
+        name="Smart Task Router",
+        context_window=128_000,
+        cost_per_1m_input=0.10,  # Очень дешево благодаря routing
+        cost_per_1m_output=0.30,
+        description="Автоматический выбор оптимальной модели для задачи",
+        best_for=["auto_routing", "cost_effective", "versatile"]
+    ),
+    
     # OpenAI models
     "openai/gpt-4o": ModelInfo(
         id="openai/gpt-4o",
@@ -38,100 +74,102 @@ AVAILABLE_MODELS = {
         best_for=["reasoning", "complex_tasks", "coding", "multilingual"]
     ),
     
-    "openai/gpt-4o-mini": ModelInfo(
-        id="openai/gpt-4o-mini",
+    "openai/gpt-5-mini": ModelInfo(
+        id="openai/gpt-5-mini",
         provider="OpenAI",
-        name="GPT-4o Mini",
+        name="GPT-5 Mini",
         context_window=128_000,
         cost_per_1m_input=0.15,
         cost_per_1m_output=0.60,
-        description="Быстрая и дешевая модель для простых задач",
+        description="Быстрая и дешевая модель OpenAI",
         best_for=["simple_tasks", "fast_responses", "cost_effective"]
     ),
     
-    "openai/o1-mini": ModelInfo(
-        id="openai/o1-mini",
-        provider="OpenAI",
-        name="O1 Mini",
-        context_window=128_000,
-        cost_per_1m_input=3.00,
-        cost_per_1m_output=12.00,
-        description="Reasoning модель с CoT",
-        best_for=["complex_reasoning", "math", "logic"]
-    ),
-    
-    # Anthropic models
-    "anthropic/claude-3-5-sonnet-20241022": ModelInfo(
-        id="anthropic/claude-3-5-sonnet-20241022",
-        provider="Anthropic",
-        name="Claude 3.5 Sonnet",
-        context_window=200_000,
-        cost_per_1m_input=3.00,
-        cost_per_1m_output=15.00,
-        description="Лучший reasoning среди всех моделей",
-        best_for=["reasoning", "analysis", "long_context", "coding"]
-    ),
-    
-    "anthropic/claude-3-5-haiku-20241022": ModelInfo(
-        id="anthropic/claude-3-5-haiku-20241022",
-        provider="Anthropic",
-        name="Claude 3.5 Haiku",
-        context_window=200_000,
-        cost_per_1m_input=0.80,
-        cost_per_1m_output=4.00,
-        description="Быстрая модель Anthropic",
-        best_for=["fast_responses", "simple_tasks", "cost_effective"]
-    ),
-    
-    # Google models
-    "google/gemini-1.5-pro": ModelInfo(
-        id="google/gemini-1.5-pro",
+    # Google Gemini models
+    "google/gemini-2.5-flash": ModelInfo(
+        id="google/gemini-2.5-flash",
         provider="Google",
-        name="Gemini 1.5 Pro",
-        context_window=2_000_000,  # 2M tokens!
+        name="Gemini 2.5 Flash",
+        context_window=1_000_000,
+        cost_per_1m_input=0.075,
+        cost_per_1m_output=0.30,
+        description="Очень дешевая модель с огромным контекстом",
+        best_for=["cost_effective", "long_documents", "fast_responses"]
+    ),
+    
+    "google/gemini-2.5-pro": ModelInfo(
+        id="google/gemini-2.5-pro",
+        provider="Google",
+        name="Gemini 2.5 Pro",
+        context_window=2_000_000,
         cost_per_1m_input=1.25,
         cost_per_1m_output=5.00,
         description="Огромный context window для длинных документов",
         best_for=["long_documents", "video", "multimodal"]
     ),
     
-    "google/gemini-1.5-flash": ModelInfo(
-        id="google/gemini-1.5-flash",
-        provider="Google",
-        name="Gemini 1.5 Flash",
-        context_window=1_000_000,
-        cost_per_1m_input=0.075,
-        cost_per_1m_output=0.30,
-        description="Очень дешевая модель с большим контекстом",
-        best_for=["cost_effective", "long_documents", "fast_responses"]
+    # Coding специализированные (ВАЖНО: у нас работает coding/, но НЕ google/)
+    "coding/gemini-2.5-pro": ModelInfo(
+        id="coding/gemini-2.5-pro",
+        provider="Coding",
+        name="Gemini 2.5 Pro (Coding)",
+        context_window=2_000_000,  # 2M tokens!
+        cost_per_1m_input=1.25,
+        cost_per_1m_output=5.00,
+        description="Gemini с 2M context, оптимизированный для кода и длинных документов",
+        best_for=["coding", "long_documents", "debugging", "code_generation"]
+    ),
+    
+    # XAI Grok
+    "xai/grok-code-fast-1": ModelInfo(
+        id="xai/grok-code-fast-1",
+        provider="XAI",
+        name="Grok Code Fast 1",
+        context_window=128_000,
+        cost_per_1m_input=0.50,
+        cost_per_1m_output=1.50,
+        description="Быстрая модель для кода от XAI",
+        best_for=["coding", "fast_responses", "technical_writing"]
     ),
 }
 
 
 # ============================================
-# Рекомендации для нашего проекта
+# Рекомендации для нашего проекта (ФИНАЛЬНАЯ СТРАТЕГИЯ: GigaChat + Qwen3-Max)
 # ============================================
 
 RECOMMENDED_MODELS = {
     "agent_b_outline": [
-        "openai/gpt-4o-mini",  # Основная: дешево, качественно для русского
-        "anthropic/claude-3-5-haiku-20241022",  # Fallback: быстро
-        "google/gemini-1.5-flash",  # Backup: очень дешево
+        "gigachat",  # 🥇 PRIMARY: бесплатно, быстро (1.06s), правильно определяет diagnostic
+        "alibaba/qwen3-max",  # 🥈 FALLBACK: правильно определяет diagnostic, русские ключи
+        "deepseek/deepseek-chat",  # 🥉 Альтернатива: дешево, но медленнее (4.31s)
     ],
     
     "agent_b_complex": [
-        "openai/gpt-4o",  # Основная: сложные методологии
-        "anthropic/claude-3-5-sonnet-20241022",  # Fallback: лучший reasoning
+        "gigachat",  # 🥇 PRIMARY: отлично для русских методологий
+        "alibaba/qwen3-max",  # 🥈 FALLBACK: мощная универсальная модель
+        "openai/gpt-4o",  # 🥉 Только если критично и GigaChat/Qwen не справились
     ],
     
     "agent_c_compiler": [
-        "openai/gpt-4o-mini",  # Основная: шаблоны
-        "google/gemini-1.5-flash",  # Fallback: дешево
+        "gigachat-lite",  # 🥇 PRIMARY: бесплатно, быстро для шаблонов
+        "alibaba/qwen3-max",  # 🥈 FALLBACK: универсальная замена
+        "deepseek/deepseek-chat",  # 🥉 Альтернатива: дешево
     ],
     
     "agent_d_qa": [
-        "anthropic/claude-3-5-sonnet-20241022",  # Основная: лучший для анализа
-        "openai/gpt-4o",  # Fallback: тоже хорош
+        "gigachat-pro",  # 🥇 PRIMARY: бесплатно, хороший reasoning
+        "alibaba/qwen3-max",  # 🥈 FALLBACK: надежная замена
+        "claude-3.5-sonnet",  # 🥉 PREMIUM: только для критичных книг (ПБУ, МСФО)
+    ],
+    
+    "long_documents": [
+        "coding/gemini-2.5-pro",  # 🏆 2M tokens context! (работает)
+        "google/gemini-2.5-flash",  # 1M tokens context, очень дешево
+    ],
+    
+    "full_books": [
+        "coding/gemini-2.5-pro",  # Можно загрузить целую книгу целиком!
     ],
 }
 

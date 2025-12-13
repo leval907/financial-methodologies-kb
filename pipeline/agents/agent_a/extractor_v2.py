@@ -12,12 +12,13 @@ from pathlib import Path
 import json
 from datetime import datetime
 
-# Import existing extractor
+# Import existing extractor (from parent directory)
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from extractor import DocumentExtractor
 
-# Import new modules
-from blocks_converter import BlocksConverter, load_blocks_jsonl
-from quality_metrics import QualityMetricsCalculator
+# Import new modules (from same directory)
+from .blocks_converter import BlocksConverter, load_blocks_jsonl
+from .quality_metrics import QualityMetricsCalculator
 
 
 class DocumentExtractorV2:
