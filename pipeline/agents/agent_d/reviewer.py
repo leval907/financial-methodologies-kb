@@ -1082,6 +1082,167 @@ def render_qa_report(book_id: str, approved: bool, score: int, issues: List[Issu
 
 
 # -----------------------------
+# Public API for orchestrator
+# -----------------------------
+def validate_methodology(
+    book_id: str,
+    schema_path: Optional[Path] = None,
+    glossary_path: Optional[str] = None,
+    use_llm: bool = False,
+) -> Dict[str, Any]:
+    """
+    Public API for orchestrator: validate methodology and return qa_result dict.
+    
+    Args:
+        book_id: Book/methodology ID
+        schema_path: Path to schema file (default: schemas/methodology_compiled.schema.json)
+        glossary_path: Path to glossary (optional)
+        use_llm: Enable LLM reasoning layer (default: False)
+    
+    Returns:
+        Dict with keys: book_id, approved, score, summary, issues, metrics, etc.
+    """
+    if schema_path is None:
+        schema_path = SCHEMAS_DIR / "methodology_compiled.schema.json"
+    
+    outline_path = WORK_DIR / book_id / "outline.yaml"
+    compiled_path = DATA_DIR / "methodologies" / f"{book_id}.yaml"
+    docs_readme_path = DOCS_DIR / "methodologies" / book_id / "README.md"
+    
+    qa_dir = WORK_DIR / book_id / "qa"
+    qa_dir.mkdir(parents=True, exist_ok=True)
+    
+    issues: List[Issue] = []
+    strengths: List[str] = []
+    
+    # Schema precheck
+    schema_issues = precheck_schema(compiled_path, schema_path)
+    issues.extend(schema_issues)
+    schema_ok = (len([i for i in schema_issues if i.severity == "BLOCKER"]) == 0)
+    
+    # Load compiled YAML
+    compiled: Dict[str, Any] = {}
+    if compiled_path.exists():
+        try:
+            compiled = read_yaml(compiled_path)
+        except Exception as e:
+            issues.append(
+                Issue(
+                    id="RUNTIME-001",
+                    severity="BLOCKER",
+                    category="runtime",
+                    message=f"Failed to parse compiled YAML: {e}",
+                    evidence={"path": str(compiled_path)},
+                    fix_hint="Fix YAML syntax or regenerate with Agent C.",
+                )
+            )
+    
+    # Outline validation
+    outline: Dict[str, Any] = {}
+    if not outline_path.exists():
+        issues.append(
+            Issue(
+                id="FILES-OUTLINE-001",
+                severity="BLOCKER",
+                category="files",
+                message="Outline YAML not found (Agent B output missing).",
+                evidence={"path": str(outline_path)},
+                fix_hint="Run Agent B to produce work/<id>/outline.yaml",
+            )
+        )
+    else:
+        try:
+            outline = read_yaml(outline_path)
+        except Exception as e:
+            issues.append(
+                Issue(
+                    id="FILES-OUTLINE-002",
+                    severity="BLOCKER",
+                    category="files",
+                    message=f"Failed to parse outline YAML: {e}",
+                    evidence={"path": str(outline_path)},
+                    fix_hint="Fix outline.yaml syntax or regenerate Agent B.",
+                )
+            )
+    
+    # Other prechecks
+    glossary_cov = 1.0
+    formula_ratio = 1.0
+    
+    if compiled:
+        issues.extend(precheck_ids(compiled))
+        issues.extend(precheck_docs_consistency(book_id, compiled))
+        issues.extend(precheck_duplicate_indicators(compiled))
+        issues.extend(precheck_stage_order(compiled))
+        issues.extend(precheck_duplicate_stage_titles(compiled))
+        issues.extend(precheck_readme_coverage(book_id, compiled))
+        
+        glossary_terms = None
+        if glossary_path:
+            glossary_terms = load_glossary_terms(Path(glossary_path))
+        glossary_issues, glossary_cov = precheck_glossary(compiled, glossary_terms)
+        issues.extend(glossary_issues)
+        
+        formula_issues, formula_ratio = precheck_formulas(compiled)
+        issues.extend(formula_issues)
+        issues.extend(precheck_empty_formulas(compiled, threshold=0.7))
+    
+    # LLM reasoning (optional)
+    if use_llm:
+        docs_readme = ""
+        if docs_readme_path.exists():
+            docs_readme = docs_readme_path.read_text(encoding="utf-8")
+        
+        requesty_api_key = os.getenv("REQUESTY_API_KEY")
+        reviewer = LLMReviewer(requesty_api_key=requesty_api_key)
+        llm_issues, llm_strengths = reviewer.review(
+            compiled_yaml=compiled,
+            outline_yaml=outline,
+            docs_readme=docs_readme,
+        )
+        issues.extend(llm_issues)
+        strengths.extend(llm_strengths)
+    
+    # Decide & score
+    approved = decide(issues)
+    score = compute_score(issues, glossary_cov, formula_ratio, schema_ok)
+    
+    # Build qa_result
+    qa_result = {
+        "book_id": book_id,
+        "approved": approved,
+        "score": score,
+        "summary": {
+            "blockers": sum(1 for i in issues if i.severity == "BLOCKER"),
+            "majors": sum(1 for i in issues if i.severity == "MAJOR"),
+            "minors": sum(1 for i in issues if i.severity == "MINOR"),
+        },
+        "blockers": sum(1 for i in issues if i.severity == "BLOCKER"),
+        "warnings": sum(1 for i in issues if i.severity in ("MAJOR", "MINOR")),
+        "issues": [i.to_dict() for i in issues],
+        "metrics": {
+            "schema_valid": schema_ok,
+            "glossary_coverage": round(float(glossary_cov), 4),
+            "formula_checks_passed": round(float(formula_ratio), 4),
+        },
+        "llm_findings": {
+            "enabled": use_llm,
+            "issues_found": len([i for i in issues if "LLM-" in i.id]) if use_llm else 0,
+            "strengths_found": len(strengths) if use_llm else 0,
+            "model": "claude-sonnet-4.5" if use_llm else None,
+        },
+        "generated_at": now_iso(),
+        "reviewer": {
+            "agent": "Agent D",
+            "model": "claude-sonnet-4.5" if use_llm else "none (precheck-only)",
+            "prompt_version": "v1.0",
+        },
+    }
+    
+    return qa_result
+
+
+# -----------------------------
 # Main runner
 # -----------------------------
 def parse_args() -> argparse.Namespace:

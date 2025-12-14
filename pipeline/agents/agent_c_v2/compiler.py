@@ -389,6 +389,43 @@ def render_all(norm: Normalized, templates_dir: Path, docs_dir: Path) -> Path:
     return out_base
 
 
+def compile_methodology(
+    book_id: str,
+    work_dir: Path = DEFAULT_WORK_DIR,
+    sources_dir: Path = DEFAULT_SOURCES_DIR,
+    docs_dir: Path = DEFAULT_DOCS_DIR,
+    data_dir: Path = DEFAULT_DATA_DIR,
+    templates_dir: Path = DEFAULT_TEMPLATES_DIR,
+) -> None:
+    """
+    Public API for orchestrator: compile outline.yaml -> normalized YAML + docs.
+    
+    Args:
+        book_id: Book/methodology ID
+        work_dir: Work directory (default: repo/work)
+        sources_dir: Sources directory (default: repo/sources)
+        docs_dir: Docs directory (default: repo/docs)
+        data_dir: Data directory (default: repo/data)
+        templates_dir: Templates directory (default: repo/templates/methodology)
+    """
+    outline_path = Path(work_dir) / book_id / "outline.yaml"
+    
+    if not outline_path.exists():
+        raise FileNotFoundError(f"Outline not found: {outline_path}")
+    
+    # Load and normalize
+    raw = read_yaml(outline_path)
+    sources_meta = load_sources_metadata(Path(sources_dir), book_id)
+    norm = normalize_outline(raw=raw, book_id=book_id, sources_meta=sources_meta)
+    
+    # Write normalized YAML (machine layer)
+    out_yaml_path = Path(data_dir) / "methodologies" / f"{book_id}.yaml"
+    write_yaml(out_yaml_path, norm.normalized_yaml)
+    
+    # Render docs
+    render_all(norm, templates_dir=Path(templates_dir), docs_dir=Path(docs_dir))
+
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Agent C v2: Deterministic Compiler")
     g = p.add_mutually_exclusive_group(required=True)
