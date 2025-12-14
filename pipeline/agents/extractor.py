@@ -76,10 +76,14 @@ class DocumentExtractor:
     def extract_pdf(self, filepath: Path) -> Dict[str, Any]:
         """Извлечь текст из PDF"""
         if self.use_markitdown:
-            return self._extract_via_markitdown(filepath)
-        else:
-            # Fallback: используем другие библиотеки
-            raise NotImplementedError("Native PDF extraction not implemented yet")
+            try:
+                return self._extract_via_markitdown(filepath)
+            except RuntimeError as e:
+                # Если markitdown не справился, используем native extraction
+                print(f"⚠️  markitdown failed: {e}, falling back to PyMuPDF")
+        
+        # Native extraction через PyMuPDF
+        return self._extract_pdf_native(filepath)
     
     def extract_docx(self, filepath: Path) -> Dict[str, Any]:
         """
@@ -240,6 +244,49 @@ class DocumentExtractor:
             raise RuntimeError(f"markitdown timeout for {filepath}")
         except FileNotFoundError:
             raise RuntimeError("markitdown not installed")
+    
+    def _extract_pdf_native(self, filepath: Path) -> Dict[str, Any]:
+        """Извлечь текст из PDF через PyMuPDF (fitz)"""
+        try:
+            import fitz
+        except ImportError:
+            raise RuntimeError("PyMuPDF not installed. Run: pip install PyMuPDF")
+        
+        doc = fitz.open(filepath)
+        
+        content_parts = [f"# {filepath.name}\n\n"]
+        total_chars = 0
+        
+        for page_num in range(len(doc)):
+            page = doc[page_num]
+            page_text = page.get_text()
+            
+            if page_text.strip():
+                content_parts.append(f"## Page {page_num + 1}\n\n")
+                content_parts.append(page_text)
+                content_parts.append("\n\n---\n\n")
+                total_chars += len(page_text)
+        
+        doc.close()
+        
+        content = ''.join(content_parts)
+        
+        # Проверяем что получили текст
+        if total_chars < 100:
+            raise RuntimeError(f"PDF appears to be scanned (no text layer). Only {total_chars} chars extracted.")
+        
+        return {
+            'content': content,
+            'metadata': {
+                'method': 'PyMuPDF',
+                'pages': len(doc),
+                'lines': len(content.splitlines()),
+                'chars': len(content),
+                'quality': 'good',
+            },
+            'tables': [],
+            'formulas': [],
+        }
 
 
 def process_document(

@@ -1,0 +1,18 @@
+{
+  "source_id": "toc-steroids",
+  "source_path": "sources/toc-steroids",
+  "signals": {
+    "candidate_methodology_ids": [
+      "toc"
+    ],
+    "confidence": 0.75,
+    "keywords": [
+      "управленческий учет на стероидах",
+      "стероидах",
+      "егоров"
+    ],
+    "doc_type": "template"
+  },
+  "fingerprint": "90552bacfefa3a42",
+  "created_at": "2025-12-14T05:28:18.971098Z"
+}

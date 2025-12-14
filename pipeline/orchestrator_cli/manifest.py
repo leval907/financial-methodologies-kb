@@ -59,6 +59,9 @@ class RunManifest:
     policy: PolicyRecord
 
     created_at: str
+    
+    # Multi-source support
+    sources: List[str] = None  # List of source_ids that contributed to this methodology
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)

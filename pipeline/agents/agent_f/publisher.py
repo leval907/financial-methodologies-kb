@@ -53,6 +53,9 @@ class ReleaseSummary:
     # Policy
     require_gate_pass: bool
     
+    # Multi-source support
+    sources: List[str] = None
+    
     # Overall
     success: bool
     exit_code: int
@@ -70,8 +73,24 @@ class ReleaseSummary:
         return sum(1 for s in self.steps if s.status == "fail")
     
     @property
+    def sources_count(self) -> int:
+        return len(self.sources) if self.sources else 0
+    
+    @property
+    def is_multi_source(self) -> bool:
+        return self.sources_count > 1
+    
+    @property
     def skipped_steps(self) -> int:
         return sum(1 for s in self.steps if s.status == "skipped")
+    
+    @property
+    def sources_count(self) -> int:
+        return len(self.sources) if self.sources else 0
+    
+    @property
+    def is_multi_source(self) -> bool:
+        return self.sources_count > 1
 
 
 def parse_manifest(manifest_path: Path) -> ReleaseSummary:
@@ -138,6 +157,7 @@ def parse_manifest(manifest_path: Path) -> ReleaseSummary:
         blockers=qa.get("blockers", 0),
         warnings=qa.get("warnings", 0),
         require_gate_pass=require_gate_pass,
+        sources=data.get("sources", []),
         success=success,
         exit_code=exit_code,
     )
@@ -153,6 +173,12 @@ def render_summary(summary: ReleaseSummary) -> str:
     lines.append(f"**Run ID**: `{summary.run_id}`  ")
     lines.append(f"**Created**: {summary.created_at}  ")
     lines.append(f"**Duration**: {summary.total_duration:.1f}s  ")
+    
+    # Multi-source info
+    if summary.is_multi_source:
+        sources_str = ", ".join(summary.sources)
+        lines.append(f"**Sources**: {summary.sources_count} ({sources_str})  ")
+    
     lines.append(f"**Status**: {'✅ SUCCESS' if summary.success else '❌ FAILED'}  ")
     lines.append(f"**Exit Code**: {summary.exit_code}")
     lines.append("")

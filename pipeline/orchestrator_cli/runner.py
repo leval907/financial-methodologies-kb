@@ -70,6 +70,9 @@ class OrchestratorConfig:
     run_id: str
     steps: List[str]
 
+    # Multi-source support
+    source_paths: List[Path] = None  # For bundles with multiple sources
+
     # policy
     require_gate_pass: bool = True
 
@@ -85,10 +88,18 @@ class OrchestratorRunner:
         self.cfg = cfg
         self.run_dir = run_dir
 
+        # Extract sources for manifest
+        sources = []
+        if cfg.source_paths:
+            sources = [sp.name for sp in cfg.source_paths]
+        elif cfg.source_path:
+            sources = [cfg.source_path.name]
+
         self.manifest = RunManifest(
             run_id=cfg.run_id,
             book_id=cfg.book_id,
             source_path=str(cfg.source_path),
+            sources=sources,
             steps=[],
             qa=QARecord(),
             policy=PolicyRecord(require_gate_pass=cfg.require_gate_pass),
@@ -143,19 +154,65 @@ class OrchestratorRunner:
 
     # ---------------- Step implementations ----------------
 
+    def _merge_blocks_jsonl(self, source_paths: List[Path], output_path: Path) -> Path:
+        """
+        Merge blocks.jsonl from multiple sources into one file.
+        Adds 'source_id' field to each block for traceability.
+        
+        Args:
+            source_paths: List of source directories
+            output_path: Output path for merged blocks
+        
+        Returns:
+            Path to merged blocks file
+        """
+        ensure_dir(output_path.parent)
+        
+        with open(output_path, 'w', encoding='utf-8') as outf:
+            for source_path in source_paths:
+                blocks_path = source_path / 'extracted' / 'blocks.jsonl'
+                if not blocks_path.exists():
+                    raise FileNotFoundError(f"blocks.jsonl not found: {blocks_path}")
+                
+                source_id = source_path.name
+                
+                with open(blocks_path, 'r', encoding='utf-8') as inf:
+                    for line in inf:
+                        if not line.strip():
+                            continue
+                        try:
+                            block = json.loads(line)
+                            block['source_id'] = source_id
+                            outf.write(json.dumps(block, ensure_ascii=False) + '\n')
+                        except json.JSONDecodeError:
+                            continue
+        
+        return output_path
+
     def step_B(self) -> List[str]:
         """
         Agent B has no CLI; call Python API.
-        Input: sources/<book_id>/extracted/blocks.jsonl
+        Input: sources/<book_id>/extracted/blocks.jsonl (or merged from multiple sources)
         Output: work/<book_id>/outline_<book_id>.yaml (fallback outline.yaml accepted)
         """
         book_id = self.cfg.book_id
-        blocks_path = self.cfg.source_path / "extracted" / "blocks.jsonl"
-        if not blocks_path.exists():
-            raise FileNotFoundError(f"blocks.jsonl not found: {blocks_path}")
-
         work_dir = Path("work") / book_id
         ensure_dir(work_dir)
+
+        # Multi-source support: merge blocks if needed
+        if self.cfg.source_paths and len(self.cfg.source_paths) > 1:
+            # Merge blocks from multiple sources
+            merged_blocks = work_dir / "sources_merged" / "blocks_merged.jsonl"
+            blocks_path = self._merge_blocks_jsonl(self.cfg.source_paths, merged_blocks)
+        elif self.cfg.source_paths and len(self.cfg.source_paths) == 1:
+            # Single source from source_paths
+            blocks_path = self.cfg.source_paths[0] / "extracted" / "blocks.jsonl"
+        else:
+            # Legacy: use source_path
+            blocks_path = self.cfg.source_path / "extracted" / "blocks.jsonl"
+
+        if not blocks_path.exists():
+            raise FileNotFoundError(f"blocks.jsonl not found: {blocks_path}")
 
         from pipeline.agents.agent_b.agent_b import OutlineBuilder
 

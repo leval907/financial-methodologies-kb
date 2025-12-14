@@ -1,0 +1,4 @@
+bundle_id: test-bundle
+methodology_id: accounting-basics-test
+sources:
+  - accounting-basics-test
