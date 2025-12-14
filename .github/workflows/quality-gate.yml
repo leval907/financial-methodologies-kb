@@ -1,0 +1,76 @@
+name: Quality Gate
+
+on:
+  push:
+    paths:
+      - 'work/**/outline*.yaml'
+      - 'pipeline/agents/agent_b/**'
+      - 'pipeline/orchestrator_cli/**'
+  pull_request:
+    paths:
+      - 'work/**/outline*.yaml'
+      - 'pipeline/agents/agent_b/**'
+      - 'pipeline/orchestrator_cli/**'
+
+jobs:
+  quality-gate:
+    name: Run Quality Gate
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+      
+      - name: Run Quality Gate on all outlines
+        run: |
+          EXIT_CODE=0
+          
+          for outline in work/*/outline*.yaml; do
+            if [ -f "$outline" ]; then
+              echo "Checking: $outline"
+              
+              python pipeline/agents/agent_b/quality_gate.py \
+                --input "$outline" \
+                --report "qa/gate_$(basename $outline).json" || EXIT_CODE=$?
+              
+              if [ $EXIT_CODE -eq 2 ]; then
+                echo "❌ FAIL: $outline"
+                cat "qa/gate_$(basename $outline).json"
+              elif [ $EXIT_CODE -eq 0 ]; then
+                echo "✅ PASS: $outline"
+              else
+                echo "⚠️ ERROR: $outline (exit $EXIT_CODE)"
+              fi
+            fi
+          done
+          
+          if [ $EXIT_CODE -eq 2 ]; then
+            echo ""
+            echo "Quality Gate FAILED - see errors above"
+            exit 2
+          elif [ $EXIT_CODE -ne 0 ]; then
+            echo ""
+            echo "Quality Gate ERROR - unexpected exit code"
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ All Quality Gates PASSED"
+      
+      - name: Upload Gate reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-gate-reports
+          path: qa/gate_*.json
+          retention-days: 30
