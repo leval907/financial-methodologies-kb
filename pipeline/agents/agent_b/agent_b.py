@@ -326,6 +326,9 @@ class OutlineBuilder:
         # 3. Reduce: Собираем в единый outline
         outline = self._reduce_analyses(chapter_analyses)
         
+        # 4. Нормализация и валидация (Quality Gate compliance)
+        outline = self._normalize_and_validate(outline)
+        
         logger.info("✅ Outline построен успешно!")
         return outline
     
@@ -386,12 +389,105 @@ class OutlineBuilder:
     
     
     def _deduplicate_by_key(self, items: List[Dict], key: str) -> List[Dict]:
-        """Удаляет дубликаты по ключу"""
+        """Удаляет дубликаты по ключу с нормализацией"""
+        import re
         seen = set()
         unique = []
         for item in items:
-            value = item.get(key, '')
+            value = (item.get(key, '') or '').strip().lower()
+            value = re.sub(r'\s+', ' ', value)  # normalize whitespace
+            
             if value and value not in seen:
                 seen.add(value)
                 unique.append(item)
         return unique
+    
+    
+    def _normalize_and_validate(self, outline: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Постпроцессинг outline: нормализация + валидация под B_QUALITY_GATE
+        
+        Исправления:
+        - Фильтрация stages с placeholder titles или пустыми descriptions
+        - Перенумерация stage.order (1..N)
+        - Фильтрация + дедупликация indicators с пустыми descriptions
+        - Нормализация formula ('' → None)
+        - Маппинг severity (high/medium → critical/warning/info/low)
+        """
+        import re
+        structure = outline.get('structure', {})
+        
+        # 1. Фильтрация stages (удаляем placeholder'ы и пустые descriptions)
+        stages = structure.get('stages', [])
+        valid_stages = []
+        for stage in stages:
+            title = (stage.get('title') or '').strip()
+            desc = (stage.get('description') or '').strip()
+            
+            # Пропускаем placeholder'ы
+            if title in ['Шаг 1', 'Шаг 2', 'Шаг 3', 'Шаг 4', 'Этап 1', 'Этап 2']:
+                logger.warning(f"⚠️ Пропущен placeholder stage: {title}")
+                continue
+            
+            # Пропускаем пустые descriptions
+            if len(desc) < 15:
+                logger.warning(f"⚠️ Пропущен stage с коротким description: {title}")
+                continue
+            
+            valid_stages.append(stage)
+        
+        # 2. Перенумерация stages (1..N)
+        for i, stage in enumerate(valid_stages, 1):
+            stage['order'] = i
+        
+        # 3. Фильтрация indicators (удаляем пустые descriptions) + дедупликация
+        indicators = structure.get('indicators', [])
+        valid_indicators = []
+        seen_names = set()
+        
+        for ind in indicators:
+            desc = (ind.get('description') or '').strip()
+            
+            if len(desc) < 10:
+                logger.warning(f"⚠️ Пропущен indicator с пустым description: {ind.get('name')}")
+                continue
+            
+            # Дедупликация по normalized name
+            name = (ind.get('name') or '').strip().lower()
+            name = re.sub(r'\s+', ' ', name)
+            
+            if name in seen_names:
+                logger.warning(f"⚠️ Пропущен дубликат indicator: {ind.get('name')}")
+                continue
+            
+            seen_names.add(name)
+            
+            # Нормализация formula: '' → None
+            if ind.get('formula') == '':
+                ind['formula'] = None
+            
+            valid_indicators.append(ind)
+        
+        # 4. Нормализация severity в rules
+        SEVERITY_MAP = {
+            'high': 'critical',
+            'medium': 'warning',
+            'low': 'info'
+        }
+        
+        rules = structure.get('rules', [])
+        for rule in rules:
+            sev = rule.get('severity', 'info')
+            rule['severity'] = SEVERITY_MAP.get(sev, sev)
+        
+        # 5. Обновляем структуру
+        outline['structure'] = {
+            'stages': valid_stages,
+            'tools': structure.get('tools', []),
+            'indicators': valid_indicators,
+            'rules': rules
+        }
+        
+        logger.info(f"✅ Нормализация: {len(valid_stages)} stages, {len(valid_indicators)} indicators")
+        
+        return outline

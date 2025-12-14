@@ -1,0 +1,40 @@
+{
+  "status": "FAIL",
+  "metrics": {
+    "n_stages": 26,
+    "empty_stage_desc_ratio": 0.15384615384615385,
+    "order_ok": false,
+    "n_indicators": 21,
+    "empty_indicator_desc_ratio": 0.38095238095238093,
+    "formula_non_empty_ratio": 0.0,
+    "n_rules": 6,
+    "severity_ok": false,
+    "duplicate_indicators": 2
+  },
+  "errors": [
+    {
+      "code": "BQG_STAGE_DESC_EMPTY",
+      "message": "4 stage descriptions are empty"
+    },
+    {
+      "code": "BQG_STAGE_ORDER_RANGE",
+      "message": "stage.order must be unique and cover 1..N without gaps"
+    },
+    {
+      "code": "BQG_IND_DESC_COVERAGE",
+      "message": "indicator description coverage below 90%"
+    },
+    {
+      "code": "BQG_FORMULA_ALL_EMPTY",
+      "message": "all indicator formulas are empty/null"
+    },
+    {
+      "code": "BQG_SEVERITY_ENUM",
+      "message": "invalid severity values: ['high', 'medium']"
+    },
+    {
+      "code": "BQG_IND_DUPES",
+      "message": "duplicate indicators by normalized name: 2"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "status": "FAIL",
+  "metrics": {
+    "n_stages": 22,
+    "empty_stage_desc_ratio": 0.0,
+    "order_ok": true,
+    "n_indicators": 13,
+    "empty_indicator_desc_ratio": 0.0,
+    "formula_non_empty_ratio": 0.0,
+    "n_rules": 6,
+    "severity_ok": true,
+    "duplicate_indicators": 1
+  },
+  "errors": [
+    {
+      "code": "BQG_FORMULA_ALL_EMPTY",
+      "message": "all indicator formulas are empty/null"
+    },
+    {
+      "code": "BQG_IND_DUPES",
+      "message": "duplicate indicators by normalized name: 1"
+    }
+  ]
+}
