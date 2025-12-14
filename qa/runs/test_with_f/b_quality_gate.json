@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "metrics": {
+    "n_stages": 22,
+    "empty_stage_desc_ratio": 0.0,
+    "order_ok": true,
+    "n_indicators": 12,
+    "empty_indicator_desc_ratio": 0.0,
+    "formula_non_empty_ratio": 0.0,
+    "n_rules": 6,
+    "severity_ok": true,
+    "duplicate_indicators": 0
+  },
+  "errors": []
+}

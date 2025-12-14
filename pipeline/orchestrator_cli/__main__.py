@@ -19,8 +19,8 @@ def main() -> None:
 
     p.add_argument(
         "--steps",
-        default="B,C,D,Gate,G,E",
-        help="Comma-separated steps: B,C,D,Gate,G,E",
+        default="B,C,D,Gate,G,E,F",
+        help="Comma-separated steps: B,C,D,Gate,G,E,F",
     )
     p.add_argument("--run-id", default=None, help="Run id (default kb_<timestamp>)")
 

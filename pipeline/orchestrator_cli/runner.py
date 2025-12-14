@@ -21,7 +21,7 @@ from pipeline.orchestrator_cli.manifest import (
 )
 
 
-ALLOWED_STEPS = ["B", "C", "D", "Gate", "G", "E"]
+ALLOWED_STEPS = ["B", "C", "D", "Gate", "G", "E", "F"]
 
 
 def now_run_id() -> str:
@@ -296,6 +296,29 @@ class OrchestratorRunner:
         report = Path("data") / "published" / f"{self.cfg.book_id}.json"
         return [report] if report.exists() else []
 
+    def step_F(self) -> List[str]:
+        """
+        Agent F: Release Summary Publisher (F0 - no GitHub API).
+        Input: manifest.json (current run)
+        Output: qa/runs/<run_id>/release/summary.md
+        """
+        manifest_path = self.run_dir / "manifest.json"
+        output_path = self.run_dir / "release" / "summary.md"
+        
+        cmd = [
+            "python",
+            "pipeline/agents/agent_f/publisher.py",
+            "--manifest",
+            str(manifest_path),
+            "--output",
+            str(output_path),
+        ]
+        code, printable = run_cmd(cmd)
+        if code != 0:
+            raise RuntimeError(f"Agent F failed ({code}): {printable}")
+        
+        return [output_path] if output_path.exists() else []
+
     # ---------------- Main run logic ----------------
 
     def run(self) -> int:
@@ -375,6 +398,12 @@ class OrchestratorRunner:
                 ok, _, _ = self._record_step("E", self.step_E)
                 if not ok:
                     write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Step E failed"})
+                    return 1
+
+            elif s == "F":
+                ok, _, _ = self._record_step("F", self.step_F)
+                if not ok:
+                    write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Step F failed"})
                     return 1
 
         write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Completed"})
