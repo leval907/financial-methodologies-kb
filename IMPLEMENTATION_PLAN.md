@@ -17,6 +17,16 @@
 - Glossary v1.0 (25 терминов)
 - Шаблоны методологий (10 файлов)
 - GitHub issues система
+- **Agent A**: Document Extractor (markitdown, blocks.jsonl)
+- **Agent B**: Outline Builder (GigaChat + Qwen3-Max) ✅
+- **Agent C**: Compiler (rule-based, YAML + MD) ✅
+- **Agent D**: QA Reviewer (validation) ✅
+- **Agent E**: Graph DB Publisher (ArangoDB) ✅
+- **Agent G**: Glossary Sync (canonical terms) ✅
+- **B_QUALITY_GATE.py**: Детерминированная валидация (6 метрик) ✅
+- **Publishing Policy**: docs/publishing-policy.md ✅
+- **ArangoDB**: Schema + client (methodologies, stages, glossary_terms) ✅
+- **Database**: 1 methodology, 26 stages, 27 glossary terms ✅
 
 ## 🎯 Цель
 
@@ -40,53 +50,78 @@ S3 Bucket (Beget Cloud)
     + metadata.json
                ↓
 ┌─────────────────────────────────┐
-│  Agent B: Outline Builder       │
-│  (LangGraph + GigaChat)         │
+│  Agent B: Outline Builder ✅    │
+│  (GigaChat + Qwen3-Max)         │
 │  - Классификация типа документа │
 │  - Извлечение секций            │
 │  - Создание outline.yaml        │
+│  + Quality Gate валидация       │
 └──────────────┬──────────────────┘
                ↓
     work/<id>/outline.yaml
     (stages, tools, indicators, rules)
                ↓
 ┌─────────────────────────────────┐
-│  Agent C: Compiler              │
-│  (Template Engine)              │
+│  B_QUALITY_GATE ✅              │
+│  (Deterministic Validation)     │
+│  - 6 метрик (stages, indicators)│
+│  - PASS/FAIL + JSON report      │
+│  - Exit code 0/2                │
+└──────────────┬──────────────────┘
+               ↓
+┌─────────────────────────────────┐
+│  Agent C: Compiler ✅           │
+│  (Rule-based)                   │
 │  - Генерация по шаблонам        │
 │  - Использование glossary       │
 │  - Создание YAML паспортов      │
 └──────────────┬──────────────────┘
                ↓
-    docs/methodologies/<id>/*.md
     data/methodologies/<id>.yaml
                ↓
 ┌─────────────────────────────────┐
-│  Agent D: QA/Reviewer           │
+│  Agent D: QA Reviewer ✅        │
 │  (Validation + Quality Checks)  │
 │  - validate_glossary.py         │
 │  - Проверка полноты             │
-│  - Генерация qa_report.md       │
+│  - Генерация qa_result.json     │
 └──────────────┬──────────────────┘
                ↓
-    work/<id>/qa_report.md
+    work/<id>/qa/qa_result.json
+    (approved=true/false, blockers)
                ↓
 ┌─────────────────────────────────┐
-│  Agent E: PR Publisher          │
-│  (GitHub API)                   │
+│  Agent G: Glossary Sync ✅      │
+│  (Canonical Terms)              │
+│  - Загрузка data/glossary/**    │
+│  - Upsert в glossary_terms      │
+│  - Reconciliation stubs         │
+└──────────────┬──────────────────┘
+               ↓
+┌─────────────────────────────────┐
+│  Agent E: Graph DB Publisher ✅ │
+│  (ArangoDB)                     │
+│  - QA approval gating           │
+│  - Upsert methodologies/stages  │
+│  - Content hash tracking        │
+│  - Lineage metadata             │
+└──────────────┬──────────────────┘
+               ↓
+┌─────────────────────────────────┐
+│  ArangoDB Knowledge Base ✅     │
+│  (Graph Database)               │
+│  - Методологии (1)              │
+│  - Stages (26)                  │
+│  - Glossary terms (27)          │
+│  - Edges: methodology_has_stage │
+└─────────────────────────────────┘
+               ↓
+┌─────────────────────────────────┐
+│  Agent F: PR Publisher 🔜       │
+│  (GitHub API) - NOT IMPLEMENTED │
 │  - Создание ветки               │
 │  - Коммит + Push                │
 │  - Открытие PR                  │
-└──────────────┬──────────────────┘
-               ↓
-    GitHub Pull Request
-               ↓
-┌─────────────────────────────────┐
-│  ArangoDB Knowledge Base        │
-│  (Graph + Vector Search)        │
-│  - Методологии (vertices)       │
-│  - Связи (edges)                │
-│  - Embeddings для RAG           │
 └─────────────────────────────────┘
 ```
 
@@ -119,17 +154,40 @@ S3 Bucket (Beget Cloud)
 
 ---
 
-**Issue #18: Agent Pipeline Architecture** ⭐ THIRD
-- [ ] Создать структуру директорий `pipeline/`
-- [ ] Реализовать Agent A (Extractor) - использует OCR
-- [ ] Реализовать Agent B (Outline Builder)
-- [ ] Реализовать Agent C (Compiler)
-- [ ] Реализовать Agent D (QA Reviewer)
-- [ ] Реализовать Agent E (PR Publisher)
-- [ ] CLI интерфейс `pipeline/cli.py`
-- [ ] Тест на одной книге end-to-end
+**Issue #18: Agent Pipeline Architecture** ✅ COMPLETED
+- [x] Создать структуру директорий `pipeline/`
+- [x] Реализовать Agent A (Extractor) - markitdown + blocks.jsonl
+- [x] Реализовать Agent B (Outline Builder) - GigaChat + Qwen3-Max
+- [x] Реализовать Agent C (Compiler) - rule-based YAML/MD
+- [x] Реализовать Agent D (QA Reviewer) - validation + gating
+- [x] Реализовать Agent E (Graph DB Publisher) - ArangoDB
+- [x] Реализовать Agent G (Glossary Sync) - canonical terms
+- [x] B_QUALITY_GATE.py - детерминированная валидация
+- [ ] Agent F (PR Publisher) - NOT IMPLEMENTED
+- [ ] CLI интерфейс `pipeline/cli.py` - PARTIAL (нужен orchestrator)
+- [x] Тест на одной книге - accounting-basics-test ✅
 
-**Deliverable**: Рабочий pipeline с 5 агентами
+**Deliverable**: ✅ 6 из 7 агентов работают (Agent F остался)
+
+---
+
+**Issue #25: Agent B Quality Gate** ✅ COMPLETED (Dec 14, 2025)
+- [x] Создан B_QUALITY_GATE.py (180 строк, 6 метрик)
+- [x] Добавлен _normalize_and_validate() в agent_b.py
+- [x] Фильтрация placeholder stages (Шаг 1, Шаг 2, etc)
+- [x] Перенумерация stage.order (1..N без gaps)
+- [x] Дедупликация indicators по normalized name
+- [x] Нормализация formulas ('' → None)
+- [x] Маппинг severity (high/medium → critical/warning/info/low)
+- [x] Тестирование на accounting-basics-test → PASS
+
+**Results**:
+- BEFORE: 6 errors (15.4% empty stage desc, 38.1% empty ind desc, order issues, severity enum, 2 dupes)
+- AFTER: PASS ✅ (0 errors, all metrics green)
+- Stages: 26 → 22 (removed 4 placeholders)
+- Indicators: 21 → 12 (removed 8 empty + 1 dupe)
+
+**Deliverable**: ✅ Quality Gate для Agent B + нормализация output
 
 ---
 
