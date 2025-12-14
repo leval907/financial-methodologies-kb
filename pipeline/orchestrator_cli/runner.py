@@ -230,6 +230,9 @@ class OrchestratorRunner:
         Deterministic gate for Agent B output.
         Input: work/<book_id>/outline*.yaml
         Output: qa/runs/<run_id>/b_quality_gate.json
+        
+        Returns gate result dict.
+        Raises RuntimeError only on unexpected exit codes (not 0 or 2).
         """
         book_id = self.cfg.book_id
         outline_path = find_outline(Path("work") / book_id, book_id)
@@ -245,8 +248,10 @@ class OrchestratorRunner:
             str(report_path),
         ]
         code, printable = run_cmd(cmd)
-        if code != 0:
-            raise RuntimeError(f"Gate command failed ({code}): {printable}")
+        
+        # Gate exit codes: 0=PASS, 2=FAIL
+        if code not in (0, 2):
+            raise RuntimeError(f"Gate command failed with unexpected code ({code}): {printable}")
 
         gate = read_json(report_path)
         self.manifest.qa.gate_status = gate.get("status")
@@ -325,7 +330,7 @@ class OrchestratorRunner:
                     return 1
 
             elif s == "Gate":
-                ok, _, _ = self._record_step("Gate", lambda: [self.step_Gate()])
+                ok, _, _ = self._record_step("Gate", lambda: [str(self.run_dir / "b_quality_gate.json")] if self.step_Gate() else [])
                 if not ok:
                     write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Gate step failed"})
                     return 1

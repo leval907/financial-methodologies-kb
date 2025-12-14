@@ -1,0 +1,28 @@
+{
+  "run_id": "test_gate_2",
+  "book_id": "accounting-basics-test",
+  "source_path": "sources/accounting-basics-test",
+  "steps": [
+    {
+      "name": "Gate",
+      "status": "ok",
+      "artifacts": [
+        "{'status': 'FAIL', 'metrics': {'n_stages': 26, 'empty_stage_desc_ratio': 0.15384615384615385, 'order_ok': False, 'n_indicators': 21, 'empty_indicator_desc_ratio': 0.38095238095238093, 'formula_non_empty_ratio': 0.0, 'n_rules': 6, 'severity_ok': False, 'duplicate_indicators': 2}, 'errors': [{'code': 'BQG_STAGE_DESC_EMPTY', 'message': '4 stage descriptions are empty'}, {'code': 'BQG_STAGE_ORDER_RANGE', 'message': 'stage.order must be unique and cover 1..N without gaps'}, {'code': 'BQG_IND_DESC_COVERAGE', 'message': 'indicator description coverage below 90%'}, {'code': 'BQG_SEVERITY_ENUM', 'message': \"invalid severity values: ['high', 'medium']\"}, {'code': 'BQG_IND_DUPES', 'message': 'duplicate indicators by normalized name: 2'}]}"
+      ],
+      "started_at": "2025-12-14T04:05:29+0000",
+      "ended_at": "2025-12-14T04:05:29+0000",
+      "duration_sec": 0.079,
+      "error": null
+    }
+  ],
+  "qa": {
+    "approved": null,
+    "blockers": null,
+    "warnings": null,
+    "gate_status": "FAIL"
+  },
+  "policy": {
+    "require_gate_pass": true
+  },
+  "created_at": "2025-12-14T04:05:29+0000"
+}
