@@ -1,0 +1,12 @@
+{
+  "mcp.servers": {
+    "financial-kb": {
+      "command": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/.venv/bin/python",
+      "args": ["-m", "mcp.server"],
+      "cwd": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb",
+      "env": {
+        "PYTHONPATH": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb"
+      }
+    }
+  }
+}
