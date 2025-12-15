@@ -1,0 +1,39 @@
+{
+  "book_id": "budgeting-step-by-step",
+  "extraction_date": "2025-12-15T08:39:02.874121",
+  "agent": "Agent A v2.0",
+  "source": {
+    "filename": "budgeting-step-by-step.pdf",
+    "format": "PDF",
+    "size_bytes": 9948161,
+    "path": "/home/leval907/financial-methodologies-kb/financial-methodologies-kb/sources/budgeting-step-by-step/budgeting-step-by-step.pdf"
+  },
+  "quality": {
+    "score": 42.5,
+    "text_density": 1.0,
+    "garbage_ratio": 0.005,
+    "repeated_lines_ratio": 0.165,
+    "table_extract_coverage": 0.0
+  },
+  "routing": {
+    "ok_for_outline": false,
+    "ok_with_warnings": false,
+    "needs_repair": true
+  },
+  "warnings": [
+    "⚠️ Poor table extraction (0.0%): complex tables lost"
+  ],
+  "statistics": {
+    "total_blocks": 19908,
+    "blocks_by_type": {
+      "paragraph": 19583,
+      "list": 291,
+      "formula": 34
+    }
+  },
+  "output_files": {
+    "blocks": "budgeting-step-by-step/extracted/blocks.jsonl",
+    "full_text": "budgeting-step-by-step/extracted/full_text.md",
+    "raw_original": "budgeting-step-by-step/raw/original.pdf"
+  }
+}

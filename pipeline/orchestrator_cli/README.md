@@ -12,12 +12,28 @@ pip install pyyaml
 
 ## Быстрый старт
 
-### Полный pipeline
+### Полный RAG pipeline (рекомендуется)
+
+```bash
+python -m pipeline.orchestrator_cli \
+  --book-id accounting-basics-test \
+  --steps B_RAG,C,D,Gate,G,E,H
+```
+
+### Legacy sequential pipeline
 
 ```bash
 python -m pipeline.orchestrator_cli \
   --book-id accounting-basics-test \
   --steps B,C,D,Gate,G,E
+```
+
+### Semantic linking only
+
+```bash
+python -m pipeline.orchestrator_cli \
+  --book-id toc \
+  --steps H
 ```
 
 ### Gate-only (проверка существующего outline)
@@ -52,23 +68,36 @@ python -m pipeline.orchestrator_cli \
 
 | Шаг | Агент | Описание |
 |-----|-------|----------|
-| B | OutlineBuilder | Генерация outline.yaml из blocks.jsonl |
+| B | OutlineBuilder | Генерация outline.yaml из blocks.jsonl (sequential mode) |
+| B_RAG | RAGExtractor | Vector-based extraction via Qdrant (4x faster, 10x cheaper) |
 | C | Compiler | Компиляция MD файлов из outline |
 | D | QA Reviewer | Валидация методологии |
 | Gate | B_QUALITY_GATE | Проверка структуры outline (останавливает при FAIL) |
 | G | GlossarySync | Синхронизация глоссария |
 | E | PR Publisher | Подготовка PR |
+| F | Release Summary | Генерация релиз-ноут |
+| H | SemanticLinker | Создание semantic edges в ArangoDB (stage↔indicator/tool/rule) |
 
 ## Порядок выполнения
 
-**Нормальный flow** (Gate PASS):
+**Полный RAG pipeline** (рекомендуется):
+```
+B_RAG → C → D → Gate [PASS] → G → E → H
+```
+
+**Legacy sequential pipeline**:
 ```
 B → C → D → Gate [PASS] → G → E
 ```
 
 **Gate FAIL flow**:
 ```
-B → C → D → Gate [FAIL] → STOP (G, E пропущены)
+B_RAG → C → D → Gate [FAIL] → STOP (G, E, H пропущены)
+```
+
+**Semantic linking only** (уже есть entities в ArangoDB):
+```
+H
 ```
 
 ## Выходные данные

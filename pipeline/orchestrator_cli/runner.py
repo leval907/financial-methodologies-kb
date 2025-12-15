@@ -21,7 +21,7 @@ from pipeline.orchestrator_cli.manifest import (
 )
 
 
-ALLOWED_STEPS = ["B", "C", "D", "Gate", "G", "E", "F"]
+ALLOWED_STEPS = ["B", "B_RAG", "C", "D", "Gate", "G", "E", "F", "H"]
 
 
 def now_run_id() -> str:
@@ -229,6 +229,58 @@ class OrchestratorRunner:
 
         return [out_path]
 
+    def step_B_RAG(self) -> List[str]:
+        """
+        Agent B RAG mode: semantic extraction via Qdrant.
+        Input: sources/<book_id>/<book_id>_full_ocr.txt
+        Output: work/<book_id>/outline_rag.yaml
+        """
+        book_id = self.cfg.book_id
+        work_dir = Path("work") / book_id
+        ensure_dir(work_dir)
+
+        # Determine input text file
+        if self.cfg.source_paths and len(self.cfg.source_paths) == 1:
+            source_path = self.cfg.source_paths[0]
+        else:
+            source_path = self.cfg.source_path
+
+        # Try multiple naming patterns
+        txt_candidates = [
+            source_path / f"{book_id}_full_ocr.txt",
+            source_path / "extracted" / f"{book_id}_full_ocr.txt",
+            source_path / "extracted" / f"{book_id}.txt",
+            source_path / f"{book_id}.txt",
+        ]
+        
+        txt_path = None
+        for candidate in txt_candidates:
+            if candidate.exists():
+                txt_path = candidate
+                break
+        
+        if not txt_path:
+            raise FileNotFoundError(f"Text file not found for {book_id} in {source_path}")
+
+        # Run Agent B RAG
+        collection_name = f"books_{book_id.replace('-', '_')}"
+        output_path = work_dir / "outline_rag.yaml"
+        
+        cmd = [
+            "python",
+            "pipeline/agents/agent_b_rag/agent_b_rag.py",
+            "--book", str(txt_path),
+            "--book-id", book_id,
+            "--collection", collection_name,
+            "--output", str(output_path),
+        ]
+        
+        code, printable = run_cmd(cmd)
+        if code != 0:
+            raise RuntimeError(f"Agent B RAG failed ({code}): {printable}")
+
+        return [output_path]
+
     def step_C(self) -> List[str]:
         """
         Agent C has no CLI; call compile_methodology(book_id)
@@ -376,6 +428,35 @@ class OrchestratorRunner:
         
         return [output_path] if output_path.exists() else []
 
+    def step_H(self) -> List[str]:
+        """
+        Agent H: Semantic Linker - создает семантические связи в ArangoDB.
+        Input: ArangoDB (methodology, stages, tools, indicators, rules)
+        Output: ArangoDB edges (stage_uses_indicator, stage_uses_tool, stage_has_rule)
+        """
+        # Agent H работает с методологией 'toc' по умолчанию
+        # TODO: сделать configurable через methodology_id
+        methodology_id = "toc"  # Hardcoded для текущей версии
+        
+        cmd = [
+            "python",
+            "-m",
+            "pipeline.agents.agent_h_semantic_linker",
+            methodology_id,
+        ]
+        
+        # Добавляем опции если нужно
+        # cmd.append("--limit")  # Для тестирования
+        # cmd.append("10")
+        
+        code, printable = run_cmd(cmd)
+        if code != 0:
+            raise RuntimeError(f"Agent H failed ({code}): {printable}")
+        
+        # Agent H не создает файл-артефакт, работает напрямую с ArangoDB
+        # Можно добавить report file в будущем
+        return []
+
     # ---------------- Main run logic ----------------
 
     def run(self) -> int:
@@ -395,6 +476,12 @@ class OrchestratorRunner:
                 ok, _, _ = self._record_step("B", self.step_B)
                 if not ok:
                     write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Step B failed"})
+                    return 1
+
+            elif s == "B_RAG":
+                ok, _, _ = self._record_step("B_RAG", self.step_B_RAG)
+                if not ok:
+                    write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Step B_RAG failed"})
                     return 1
 
             elif s == "C":
@@ -461,6 +548,12 @@ class OrchestratorRunner:
                 ok, _, _ = self._record_step("F", self.step_F)
                 if not ok:
                     write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Step F failed"})
+                    return 1
+
+            elif s == "H":
+                ok, _, _ = self._record_step("H", self.step_H)
+                if not ok:
+                    write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Step H failed"})
                     return 1
 
         write_json(self.run_dir / "final.json", {"status": "FINALIZE", "reason": "Completed"})
